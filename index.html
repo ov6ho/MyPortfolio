@@ -738,6 +738,7 @@
         }
 
         .contact-info {
+            box-sizing: border-box;
             flex: 1;
         }
 
@@ -836,17 +837,13 @@
         }
 
         /* ==========================================================================
-           ==========================================================================
            قواعد التحويل الحيوية لـ [الوضع العادي - Normal Mode]
-           تقوم بتعطيل ثيم الاختراق المشع وتحويله إلى تصميم كلاسيكي نظيف ورسمي
-           ==========================================================================
            ========================================================================== */
-        
         body.normal-mode {
             background-color: #fafafa;
             color: #1e293b;
-            background-image: none; /* إلغاء شبكة النقاط الفوسفورية */
-            cursor: default; /* إرجاع مؤشر الماوس الطبيعي لمسؤولي التوظيف */
+            background-image: none;
+            cursor: default;
         }
 
         body.normal-mode a, body.normal-mode button, body.normal-mode input, body.normal-mode textarea, body.normal-mode .logo, body.normal-mode .cv-btn, body.normal-mode .subscribe-btn {
@@ -875,7 +872,6 @@
             box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
         }
 
-        /* إخفاء الترمنال والرادار والكلمات العشوائية الكبيرة تماماً في الوضع الرسمي */
         body.normal-mode .cyber-terminal, 
         body.normal-mode .cyber-radar, 
         body.normal-mode .portfolio-text {
@@ -901,7 +897,35 @@
         body.normal-mode .role { color: #475569; }
         body.normal-mode .role span { color: #4f46e5; }
 
-        /* تغيير تصميم كروت وتفاصيل الأقسام */
+        /* --- [إصلاح وتعديل ألوان أيقونات التواصل الاجتماعي الثابتة في الوضع العادي] --- */
+        body.normal-mode .social-icons a {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        /* أيقونة GitHub الافتراضية في الوضع العادي */
+        body.normal-mode .social-icons a.gh {
+            color: #24292e;
+        }
+        /* أيقونة Instagram الافتراضية في الوضع العادي */
+        body.normal-mode .social-icons a.ig {
+            color: #d6249f;
+        }
+        /* أيقونة LinkedIn الافتراضية في الوضع العادي */
+        body.normal-mode .social-icons a.in {
+            color: #0077b5;
+        }
+        /* أيقونة WhatsApp الافتراضية في الوضع العادي */
+        body.normal-mode .social-icons a.wa {
+            color: #25d366;
+        }
+
+        /* بقاء تلوين كروت الخلفيات مريح للماوس */
+        body.normal-mode .social-icons a.gh:hover { background-color: #24292e; color: #fff; }
+        body.normal-mode .social-icons a.ig:hover { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); color: #fff; border-color: transparent; }
+        body.normal-mode .social-icons a.in:hover { background-color: #0077b5; color: #fff; }
+        body.normal-mode .social-icons a.wa:hover { background-color: #25d366; color: #fff; }
+
         body.normal-mode .about-section { background-color: #ffffff; }
         body.normal-mode .tech-card {
             background: #ffffff;
@@ -972,7 +996,6 @@
         }
         body.normal-mode .footer span { color: #4f46e5; }
 
-        /* إخفاء مشغل الصوت تماماً في الوضع العادي الكلاسيكي لحفظ الطابع الرسمي */
         body.normal-mode .audio-player-container {
             opacity: 0;
             transform: scale(0.8);
@@ -993,7 +1016,7 @@
             body.normal-mode .image-box { height: auto; overflow: visible; }
             .cyber-radar { width: 350px; height: 350px; position: relative; top: auto; right: auto; margin: 0 auto; }
             .profile-pic { width: 450px; bottom: -60px; right: 50%; transform: translateX(50%); }
-            body.normal-mode .profile-pic { width: 100%; max-width: 38px; bottom: auto; right: auto; transform: none; }
+            body.normal-mode .profile-pic { width: 100%; max-width: 420px; bottom: auto; right: auto; transform: none; }
             .about-section, .skills-section, .contact-section { padding: 60px 5%; flex-direction: column; gap: 40px; text-align: center; }
             body.ar .about-content .section-title, .about-content .section-title { text-align: center !important; }
             body.ar .contact-info .section-title, .contact-info .section-title { text-align: center !important; }
@@ -1024,7 +1047,8 @@
         }
     </style>
 </head>
-<body class="en hacker-mode"> <nav class="navbar">
+<body class="en hacker-mode"> 
+    <nav class="navbar">
         <div class="logo glitch">
             Mohsen<span>Alsharafi</span>
         </div>
@@ -1312,7 +1336,6 @@
         }
 
         function startTyping() {
-            // نمط آمن: لا يتم كتابة الـ Typewriter إذا كان المستخدم في الوضع العادي الكلاسيكي
             if (document.body.classList.contains('normal-mode')) return;
 
             clearTimeout(typingTimeout);
@@ -1325,7 +1348,6 @@
 
         window.onload = startTyping;
 
-        /* دالة التحكم في فتح وإغلاق كروت المهارات المنسدلة بسلاسة وبشكل منفرد */
         function toggleSkill(box) {
             const activeBoxes = document.querySelectorAll('.skill-box.active');
             activeBoxes.forEach(activeBox => { 
@@ -1335,7 +1357,6 @@
             box.classList.toggle('active');
         }
 
-        /* --- [برمجيات مشغل الموسيقى السيبراني التفاعلي] --- */
         const audio = document.getElementById('cyber-audio');
         const audioContainer = document.getElementById('cyber-audio-container');
         const audioIcon = document.getElementById('audio-icon');
@@ -1365,21 +1386,16 @@
             }
         }
 
-        /* --- [دالة التحكم وتبديل ثيمات الأوضاع (Hacker vs Normal)] --- */
         function toggleMode() {
             const body = document.body;
             const btn = document.getElementById('mode-toggle-btn');
             const isAr = body.classList.contains('ar');
 
             if (body.classList.contains('hacker-mode')) {
-                // التحول للوضع الكلاسيكي العادي (Normal Mode)
                 body.classList.remove('hacker-mode');
                 body.classList.add('normal-mode');
-                
-                // تحديث نص الزر حسب لغة الموقع الحالية
                 btn.textContent = isAr ? 'وضع الهكر' : 'Hacker Mode';
                 
-                // إيقاف الموسيقى فوراً لضمان الطابع الرسمي التقليدي
                 if (!audio.paused) {
                     audio.pause();
                     audioContainer.classList.remove('playing');
@@ -1387,12 +1403,9 @@
                     updateStatusText(false);
                 }
             } else {
-                // العودة لوضع الاختراق والتأثيرات المشعة (Hacker Mode)
                 body.classList.remove('normal-mode');
                 body.classList.add('hacker-mode');
                 btn.textContent = isAr ? 'الوضع العادي' : 'Normal Mode';
-                
-                // إعادة تفعيل كتابة الترمنال تلقائياً
                 startTyping();
             }
         }
@@ -1411,8 +1424,6 @@
                 body.classList.remove('en');
                 body.classList.add('ar');
                 btn.textContent = 'EN';
-                
-                // تحديث نصوص زر الوضع عند التحويل للعربي
                 modeBtn.textContent = isHacker ? 'الوضع العادي' : 'وضع الهكر';
 
                 if (nameInput) nameInput.placeholder = 'اسمك الكريم';
@@ -1423,8 +1434,6 @@
                 body.classList.remove('ar');
                 body.classList.add('en');
                 btn.textContent = 'AR';
-                
-                // تحديث نصوص زر الوضع عند التحويل للإنجليزي
                 modeBtn.textContent = isHacker ? 'Normal Mode' : 'Hacker Mode';
 
                 if (nameInput) nameInput.placeholder = 'Your Name';
