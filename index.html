@@ -3,1558 +3,2969 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohsen Alsharafi - Cybersecurity</title>
+    <title>Mohsen Alsharafi — Cybersecurity</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;700;800;900&family=IBM+Plex+Mono:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* ==========================================================================
-           1. التنسيقات الأساسية والأصيلة الخاصة بك
-           ========================================================================== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            scroll-behavior: smooth;
+        /* ============================================================
+           VARIABLES & RESET
+        ============================================================ */
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --accent: #00e5ff;
+            --accent2: #a855f7;
+            --green: #22c55e;
+            --red: #ff003c;
+            --bg: #080810;
+            --bg2: #0d0d18;
+            --bg3: #12121f;
+            --surface: rgba(18, 18, 31, 0.85);
+            --border: rgba(0, 229, 255, 0.15);
+            --border2: rgba(99, 102, 241, 0.2);
+            --text: #e2e8f0;
+            --muted: #64748b;
+            --font-display: 'Syne', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-mono2: 'IBM Plex Mono', monospace;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
 
         body {
-            background-color: #111115;
-            color: #ffffff;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-display);
             overflow-x: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: crosshair;
-            background-image: radial-gradient(rgba(99, 102, 241, 0.15) 1px, transparent 1px);
-            background-size: 30px 30px;
+            cursor: none;
         }
 
-        a, button, input, textarea, .logo, .cv-btn, .subscribe-btn {
-            cursor: crosshair !important;
+        body.normal-mode { cursor: auto; }
+
+        body.en { direction: ltr; text-align: left; }
+        body.ar { direction: rtl; text-align: right; }
+        body.en .ar-text { display: none !important; }
+        body.ar .en-text { display: none !important; }
+
+        a, button { cursor: none; }
+        body.normal-mode a, body.normal-mode button { cursor: pointer; }
+
+        /* ============================================================
+           CUSTOM CURSOR
+        ============================================================ */
+        #cursor-outer {
+            position: fixed;
+            width: 36px;
+            height: 36px;
+            border: 1.5px solid var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transition: transform 0.12s ease, border-color 0.3s;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: normal;
+        }
+        #cursor-dot {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.05s ease;
+            box-shadow: 0 0 8px var(--accent);
+        }
+        #cursor-outer.hovering {
+            transform: translate(-50%, -50%) scale(1.8);
+            border-color: var(--primary);
+            background: rgba(99,102,241,0.1);
+        }
+        body.normal-mode #cursor-outer,
+        body.normal-mode #cursor-dot { display: none; }
+
+        /* ============================================================
+           BOOT / LOADING SCREEN
+        ============================================================ */
+        #boot-screen {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 99998;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            transition: opacity 0.6s ease;
+        }
+        #boot-screen.hidden { opacity: 0; pointer-events: none; }
+
+        .boot-lines {
+            width: min(600px, 90vw);
+        }
+        .boot-line {
+            font-size: 13px;
+            margin-bottom: 6px;
+            opacity: 0;
+            animation: bootfade 0.1s ease forwards;
+        }
+        .boot-line.ok { color: var(--green); }
+        .boot-line.info { color: var(--accent); }
+        .boot-line.warn { color: #f59e0b; }
+        .boot-line.err { color: var(--red); }
+        .boot-line.white { color: var(--text); }
+
+        @keyframes bootfade {
+            to { opacity: 1; }
         }
 
-        /* --- إعدادات التبديل بين اللغتين (CSS التلقائي) --- */
-        body.en {
-            direction: ltr;
-            text-align: left;
+        .boot-bar-wrap {
+            width: min(600px, 90vw);
+            margin-top: 30px;
+            background: rgba(255,255,255,0.05);
+            height: 4px;
+            border-radius: 4px;
+            overflow: hidden;
         }
-
-        body.ar {
-            direction: rtl;
+        .boot-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            box-shadow: 0 0 12px var(--accent);
+            transition: width 0.05s linear;
+        }
+        .boot-percent {
+            color: var(--muted);
+            font-size: 12px;
+            font-family: var(--font-mono);
+            margin-top: 10px;
             text-align: right;
+            width: min(600px, 90vw);
         }
 
-        body.en .ar-text {
-            display: none !important;
+        /* ============================================================
+           MATRIX RAIN CANVAS
+        ============================================================ */
+        #matrix-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            opacity: 0.045;
+            pointer-events: none;
         }
+        body.normal-mode #matrix-canvas { display: none; }
 
-        body.ar .en-text {
-            display: none !important;
+        /* ============================================================
+           PROGRESS SIDEBAR
+        ============================================================ */
+        #section-progress {
+            position: fixed;
+            right: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: opacity 0.3s;
         }
-
-        body.ar .about-content .section-title,
-        body.ar .contact-info .section-title,
-        body.ar .challenge-section .section-title {
-            text-align: right;
+        body.ar #section-progress { right: auto; left: 28px; }
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border);
+            border: 1px solid var(--muted);
+            transition: all 0.3s ease;
+            cursor: none;
+            position: relative;
         }
-
-        body.ar .skill-box {
-            border-left: none;
-            border-right: 4px solid #6366f1;
+        .progress-dot.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+            transform: scale(1.4);
         }
-
-        body.ar .progress-fill {
-            left: auto;
-            right: 0;
-            background: linear-gradient(-90deg, #6366f1, #00e5ff);
+        .progress-dot::before {
+            content: attr(data-label);
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--muted);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
         }
+        body.ar .progress-dot::before { right: auto; left: 18px; }
+        #section-progress:hover .progress-dot::before { opacity: 1; }
 
-        /* --- تأثير التشويش (Glitch) --- */
-        .glitch {
-            transition: all 0.1s ease;
-        }
+        @media (max-width: 900px) { #section-progress { display: none; } }
 
-        body.hacker-mode .glitch:hover {
-            animation: glitch-anim 0.2s linear infinite;
-        }
-
-        @keyframes glitch-anim {
-            0% { transform: translate(0); text-shadow: none; }
-            20% { transform: translate(-2px, 2px); text-shadow: 2px 0 #00e5ff, -2px 0 #ff003c; }
-            40% { transform: translate(-2px, -2px); text-shadow: -2px 0 #00e5ff, 2px 0 #ff003c; }
-            60% { transform: translate(2px, 2px); text-shadow: 2px 0 #00e5ff, -2px 0 #ff003c; }
-            80% { transform: translate(2px, -2px); text-shadow: -2px 0 #00e5ff, 2px 0 #ff003c; }
-            100% { transform: translate(0); text-shadow: none; }
-        }
-
-        /* --- شريط التنقل (Navbar) --- */
+        /* ============================================================
+           NAVBAR
+        ============================================================ */
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 30px 8%;
-            background: rgba(17, 17, 21, 0.9);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+            padding: 22px 7%;
+            background: rgba(8, 8, 16, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
             transition: all 0.4s ease;
+        }
+        .navbar.scrolled {
+            padding: 14px 7%;
+            background: rgba(8, 8, 16, 0.97);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: bold;
-            letter-spacing: 1px;
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
             direction: ltr;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text);
+            text-decoration: none;
         }
-
-        .logo span {
-            color: #6366f1;
+        .logo .logo-bracket { color: var(--accent); font-family: var(--font-mono); font-size: 18px; }
+        .logo .logo-name { color: #fff; }
+        .logo .logo-accent { color: var(--primary); }
+        .logo .logo-blink {
+            display: inline-block;
+            width: 2px;
+            height: 18px;
+            background: var(--accent);
+            margin-left: 2px;
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
         }
 
         .nav-links {
             list-style: none;
             display: flex;
             align-items: center;
-            gap: 25px;
+            gap: 8px;
         }
-
         .nav-links a {
-            color: #d1d1d1;
+            color: var(--muted);
             text-decoration: none;
-            font-size: 15px;
-            position: relative;
-            transition: color 0.3s ease;
+            font-size: 14px;
+            font-family: var(--font-mono);
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.25s ease;
+            border: 1px solid transparent;
         }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background: #00e5ff;
-            bottom: -5px;
-            left: 0;
-            transition: width 0.3s ease;
-            box-shadow: 0 0 10px #00e5ff;
-        }
-
         .nav-links a:hover {
-            color: #ffffff;
+            color: var(--text);
+            border-color: var(--border2);
+            background: rgba(99,102,241,0.08);
+        }
+        .nav-links a .nav-num {
+            color: var(--primary);
+            font-size: 11px;
+            margin-right: 4px;
         }
 
-        .nav-links a:hover::after {
-            width: 100%;
+        .nav-btn {
+            font-family: var(--font-mono);
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all 0.25s ease;
+            letter-spacing: 0.5px;
+        }
+        .nav-btn:hover {
+            background: var(--accent);
+            color: var(--bg);
+            box-shadow: 0 0 16px rgba(0,229,255,0.35);
+        }
+        .nav-btn.mode-btn {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .nav-btn.mode-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 0 16px rgba(99,102,241,0.35);
         }
 
-        .lang-btn, .mode-btn {
-            background: rgba(0, 229, 255, 0.1);
-            border: 1px solid #00e5ff;
-            color: #00e5ff;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-
-        .lang-btn:hover, .mode-btn:hover {
-            background: #00e5ff;
-            color: #111115;
-            box-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
-        }
-
-        .subscribe-btn {
-            background-color: transparent;
-            border: 2px solid #6366f1;
-            color: #6366f1;
-            padding: 10px 25px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .subscribe-btn:hover {
-            background-color: #6366f1;
-            color: white;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
-        }
-
-        /* --- القسم الرئيسي (Hero Section) --- */
-        .hero-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 50px 8% 0;
-            position: relative;
-            height: calc(100vh - 100px);
-        }
-
-        .content {
-            max-width: 50%;
-            z-index: 2;
-        }
-
-        .cyber-terminal {
-            font-family: 'Courier New', Courier, monospace;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(0, 229, 255, 0.3);
-            padding: 8px 15px;
-            border-radius: 5px;
-            display: inline-block;
-            margin-bottom: 15px;
+        .contact-nav-btn {
+            font-family: var(--font-mono);
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 9px 22px;
+            border-radius: 6px;
             font-size: 13px;
-            color: #00e5ff;
-            box-shadow: 0 0 10px rgba(0, 229, 255, 0.1);
-            direction: ltr !important;
-            text-align: left !important;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+        }
+        .contact-nav-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .contact-nav-btn:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(99,102,241,0.4); }
+        .contact-nav-btn:hover::before { opacity: 1; }
+
+        /* Mobile hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            padding: 6px;
+        }
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 2px;
             transition: all 0.3s ease;
         }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        .cyber-terminal .prompt {
-            color: #22c55e;
-            margin-right: 5px;
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 70px; left: 0; right: 0;
+            background: rgba(8,8,16,0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 7%;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 999;
         }
-
-        .cyber-terminal .cursor-blink {
-            animation: blink 1s step-end infinite;
-        }
-
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
-
-        .name {
-            font-size: 55px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            line-height: 1.2;
-        }
-
-        .name span {
-            color: #6366f1;
-        }
-
-        .role {
-            font-size: 20px;
-            margin-bottom: 30px;
-            color: #d1d1d1;
-        }
-
-        .role span {
-            color: #00e5ff;
-            font-weight: bold;
-        }
-
-        .cv-btn {
-            background-color: #6366f1;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 25px;
+        .mobile-menu.open { display: flex; }
+        .mobile-menu a, .mobile-menu button {
+            font-family: var(--font-mono);
+            color: var(--text);
             text-decoration: none;
             font-size: 15px;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 40px;
-            transition: all 0.3s ease;
-            border: none;
-            animation: pulse-glow 2s infinite;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
         }
 
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+        /* ============================================================
+           SECTION BASE STYLES
+        ============================================================ */
+        section { position: relative; z-index: 1; }
+
+        .section-tag {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 12px;
+            display: block;
         }
 
-        .cv-btn:hover {
-            background-color: #4f46e5;
-            transform: translateY(-3px);
-            animation: none;
-            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4);
-        }
-
-        .social-icons {
-            display: flex;
-            flex-direction: row;
-            gap: 15px;
-            direction: ltr !important;
-            justify-content: flex-start;
-        }
-
-        body.ar .social-icons {
-            justify-content: flex-end;
-        }
-
-        .social-icons a {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            color: white;
-            text-decoration: none;
-            font-size: 18px;
-            transition: all 0.3s ease;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .social-icons a:hover {
-            transform: translateY(-6px) scale(1.1);
-        }
-
-        .gh:hover { background-color: #333333; border-color: #333333; box-shadow: 0 0 15px #333333; }
-        .ig:hover { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); border-color: transparent; box-shadow: 0 0 15px #d6249f; }
-        .in:hover { background-color: #0077b5; border-color: #0077b5; box-shadow: 0 0 15px #0077b5; }
-        .wa:hover { background-color: #25d366; border-color: #25d366; box-shadow: 0 0 15px #25d366; }
-
-        .portfolio-text {
-            font-size: 140px;
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(32px, 5vw, 52px);
             font-weight: 900;
-            font-family: 'Arial Black', sans-serif;
-            position: absolute;
-            bottom: 0px;
-            left: 5%;
-            z-index: 1;
-            letter-spacing: 10px;
-            cursor: default;
-            direction: ltr;
-            transition: all 0.3s ease;
+            line-height: 1.05;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+        .section-title span { color: var(--primary); }
+        .section-title .accent-word { 
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .portfolio-text span {
-            display: inline-block;
-            color: transparent;
-            -webkit-text-stroke: 2px rgba(255, 255, 255, 0.05);
-            transition: all 0.4s ease;
-        }
-
-        body.hacker-mode .portfolio-text span:nth-child(odd):hover {
-            transform: translateY(-15px);
-            color: #00e5ff;
-            -webkit-text-stroke: 2px #00e5ff;
-            text-shadow: 0 10px 30px rgba(0, 229, 255, 0.6);
-        }
-
-        body.hacker-mode .portfolio-text span:nth-child(even):hover {
-            transform: translateY(-15px);
-            color: #6366f1;
-            -webkit-text-stroke: 2px #6366f1;
-            text-shadow: 0 10px 30px rgba(99, 102, 241, 0.6);
-        }
-
-        /* الرادار السيبراني */
-        .image-box {
-            position: relative;
-            width: 50%;
-            height: 90%;
+        .section-divider {
             display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            transition: all 0.4s ease;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 60px;
         }
-
-        .cyber-radar {
-            position: absolute;
-            width: 460px;
-            height: 460px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
-            border: 1px solid rgba(0, 229, 255, 0.2);
-            z-index: 1;
-            right: 5%;
-            top: 15%;
-            box-shadow: 0 0 50px rgba(0, 229, 255, 0.1) inset;
-            transition: all 0.4s ease;
+        .section-divider.centered { justify-content: center; }
+        .divider-line {
+            flex: 1;
+            max-width: 80px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--primary), transparent);
         }
+        .divider-line.right { background: linear-gradient(270deg, var(--primary), transparent); }
 
-        .cyber-radar::before {
-            content: '';
-            position: absolute;
-            top: -15px;
-            left: -15px;
-            right: -15px;
-            bottom: -15px;
-            border-radius: 50%;
-            border: 2px dashed #00e5ff;
-            animation: spin 20s linear infinite;
-            opacity: 0.6;
+        /* Reveal animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1);
         }
+        .reveal.visible { opacity: 1; transform: none; }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+        .reveal-delay-5 { transition-delay: 0.5s; }
+        .reveal-delay-6 { transition-delay: 0.6s; }
 
-        .cyber-radar::after {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            bottom: 20px;
-            border-radius: 50%;
-            border: 2px dotted #6366f1;
-            animation: spin-reverse 15s linear infinite;
-            opacity: 0.8;
-        }
-
-        .profile-pic {
-            position: absolute;
-            bottom: -60px;
-            right: -45px;
-            width: 600px;
-            height: auto;
-            z-index: 2;
-            -webkit-mask-image: linear-gradient(to bottom, black 65%, transparent 95%);
-            mask-image: linear-gradient(to bottom, black 65%, transparent 95%);
-            filter: drop-shadow(0 0 15px rgba(99,102,241,0.2));
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* --- قسم About Me --- */
-        .about-section {
-            padding: 100px 8%;
-            background-color: rgba(17, 17, 21, 0.8);
+        /* ============================================================
+           HERO SECTION
+        ============================================================ */
+        .hero-section {
+            min-height: 100vh;
+            padding: 0 7%;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 60px;
-            min-height: 80vh;
-            transition: all 0.4s ease;
-        }
-
-        .about-image-container {
-            box-sizing: border-box;
-            flex: 1;
-            display: flex;
-            justify-content: center;
-        }
-
-        .tech-card {
-            width: 320px;
-            height: 400px;
-            background: linear-gradient(145deg, #181820, #111115);
-            border-radius: 20px;
-            border: 1px solid rgba(0, 229, 255, 0.3);
-            box-shadow: 0 0 30px rgba(0, 229, 255, 0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.4s ease;
+            padding-top: 90px;
             position: relative;
             overflow: hidden;
         }
 
-        .tech-card::before {
+        /* Animated grid lines */
+        .hero-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+        .hero-grid::before {
             content: '';
             position: absolute;
-            top: -100%;
-            left: 0;
-            width: 100%;
-            height: 10px;
-            background: #00e5ff;
-            box-shadow: 0 0 15px #00e5ff;
-            opacity: 0.5;
+            inset: 0;
+            background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(99,102,241,0.07), transparent);
+        }
+
+        .hero-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+            top: 50%;
+            right: 10%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            flex: 1;
+            max-width: 560px;
+            z-index: 2;
+        }
+
+        .terminal-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid rgba(0,229,255,0.25);
+            padding: 8px 16px;
+            border-radius: 6px;
+            margin-bottom: 24px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--accent);
+            box-shadow: 0 0 20px rgba(0,229,255,0.06), inset 0 0 20px rgba(0,229,255,0.02);
+            direction: ltr !important;
+        }
+        .terminal-badge .prompt { color: var(--green); margin-right: 4px; }
+        .terminal-badge .blink { animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .hero-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .hero-eyebrow::before {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: var(--primary);
+            display: block;
+        }
+        body.ar .hero-eyebrow::before { display: none; }
+        body.ar .hero-eyebrow::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: var(--primary);
+            display: block;
+        }
+
+        .hero-name {
+            font-family: var(--font-display);
+            font-size: clamp(46px, 6.5vw, 82px);
+            font-weight: 900;
+            line-height: 0.95;
+            letter-spacing: -3px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        .hero-name .highlight {
+            background: linear-gradient(135deg, var(--primary) 30%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-role {
+            font-family: var(--font-mono);
+            font-size: clamp(14px, 2vw, 18px);
+            color: var(--muted);
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+        .hero-role .typed-role {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .hero-role .role-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: var(--accent);
+            vertical-align: middle;
+            margin-left: 2px;
+            animation: blink 1s step-end infinite;
+        }
+
+        .hero-cta-row {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            margin-bottom: 44px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: #fff;
+            padding: 13px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 20px rgba(99,102,241,0.3);
+        }
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(99,102,241,0.5); }
+        .btn-primary:hover::after { opacity: 1; }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--accent);
+            padding: 12px 26px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid rgba(0,229,255,0.4);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-outline:hover {
+            background: rgba(0,229,255,0.07);
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(0,229,255,0.15);
+        }
+
+        .social-row {
+            display: flex;
+            gap: 12px;
+            direction: ltr !important;
+        }
+        body.ar .social-row { justify-content: flex-end; }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .social-btn:hover { transform: translateY(-4px); }
+        .social-btn.gh:hover { background: #24292e; color: #fff; border-color: #24292e; box-shadow: 0 6px 20px rgba(36,41,46,0.5); }
+        .social-btn.ig:hover { background: #d6249f; color: #fff; border-color: transparent; box-shadow: 0 6px 20px rgba(214,36,159,0.5); }
+        .social-btn.in:hover { background: #0077b5; color: #fff; border-color: #0077b5; box-shadow: 0 6px 20px rgba(0,119,181,0.5); }
+        .social-btn.wa:hover { background: #25d366; color: #fff; border-color: #25d366; box-shadow: 0 6px 20px rgba(37,211,102,0.5); }
+
+        /* Hero visual */
+        .hero-visual {
+            flex: 1;
+            max-width: 520px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            height: 600px;
+            z-index: 2;
+        }
+
+        .hex-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid;
+            animation: spin linear infinite;
+        }
+        .hex-ring:nth-child(1) {
+            width: 440px; height: 440px;
+            border-color: rgba(0,229,255,0.15);
+            animation-duration: 25s;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .hex-ring:nth-child(2) {
+            width: 360px; height: 360px;
+            border-color: rgba(99,102,241,0.2);
+            border-style: dashed;
+            animation-duration: 18s;
+            animation-direction: reverse;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .hex-ring:nth-child(3) {
+            width: 480px; height: 480px;
+            border-color: rgba(168,85,247,0.1);
+            border-style: dotted;
+            animation-duration: 35s;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Floating tech badges */
+        .tech-float {
+            position: absolute;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: rgba(8,8,16,0.9);
+            border: 1px solid;
+            backdrop-filter: blur(10px);
+            animation: float-badge 4s ease-in-out infinite;
+            z-index: 5;
+        }
+        .tech-float:nth-child(4) { border-color: rgba(0,229,255,0.4); color: var(--accent); top: 18%; left: 5%; animation-delay: 0s; }
+        .tech-float:nth-child(5) { border-color: rgba(99,102,241,0.5); color: var(--primary); top: 30%; right: 3%; animation-delay: 1s; }
+        .tech-float:nth-child(6) { border-color: rgba(34,197,94,0.4); color: var(--green); bottom: 30%; left: 3%; animation-delay: 2s; }
+        .tech-float:nth-child(7) { border-color: rgba(168,85,247,0.4); color: var(--accent2); bottom: 20%; right: 5%; animation-delay: 0.5s; }
+
+        @keyframes float-badge {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .hero-image-wrap {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+        }
+        .hero-image-wrap img {
+            width: 400px;
+            height: auto;
+            -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 95%);
+            mask-image: linear-gradient(to bottom, black 60%, transparent 95%);
+            filter: drop-shadow(0 0 30px rgba(99,102,241,0.25));
+            transition: filter 0.4s ease;
+        }
+        .hero-image-wrap:hover img { filter: drop-shadow(0 0 50px rgba(0,229,255,0.35)); }
+
+        /* Scanline on image */
+        .hero-scanline {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 0;
+            width: 400px;
+            height: 100%;
+            pointer-events: none;
+            z-index: 4;
+            overflow: hidden;
+        }
+        .hero-scanline::before {
+            content: '';
+            position: absolute;
+            left: 0; right: 0;
+            height: 80px;
+            background: linear-gradient(to bottom, transparent, rgba(0,229,255,0.04), transparent);
             animation: scanline 4s linear infinite;
         }
 
-        .tech-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 0 50px rgba(0, 229, 255, 0.3);
+        @keyframes scanline {
+            0% { top: -80px; }
+            100% { top: 100%; }
         }
 
-        .tech-card i {
-            font-size: 80px;
-            color: #00e5ff;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.5));
-            transition: all 0.3s ease;
-        }
+        @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
 
-        .tech-card h3 {
-            color: #ffffff;
-            font-size: 24px;
-            letter-spacing: 1px;
-        }
-
-        .about-content {
-            flex: 1.2;
-        }
-
-        .about-content .section-title {
-            margin-bottom: 10px;
-        }
-
-        .about-subtitle {
-            font-size: 20px;
-            color: #d1d1d1;
-            margin-bottom: 25px;
-            font-weight: 500;
-        }
-
-        .about-text {
-            font-size: 16px;
-            color: #a0a0a0;
-            line-height: 1.8;
-            margin-bottom: 20px;
-        }
-
-        .about-text strong {
-            color: #00e5ff;
-            transition: all 0.3s ease;
-        }
-
-        /* --- قسم المهارات المطور --- */
-        .skills-section {
-            padding: 100px 8%;
-            background-color: transparent;
-            min-height: 80vh;
-        }
-
-        .skills-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
-            margin-top: 60px;
-            align-items: flex-start; 
-        }
-
-        .skill-box {
-            background-color: rgba(24, 24, 32, 0.8);
-            padding: 30px;
-            border-radius: 15px;
-            border-left: 4px solid #00e5ff;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s ease;
-            cursor: pointer !important;
-            position: relative;
-            overflow: hidden;
-            height: auto;
-        }
-
-        .skill-box:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 229, 255, 0.15);
-        }
-
-        .skill-box.active {
-            border-color: #6366f1;
-            background-color: rgba(30, 30, 42, 0.9);
-        }
-
-        .skill-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .skill-name {
-            font-size: 18px;
-            font-weight: bold;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .skill-name i {
-            color: #00e5ff;
-            transition: all 0.3s ease;
-        }
-
-        .skill-percent {
-            color: #00e5ff;
-            font-weight: bold;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background-color: #111115;
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(0,229,255,0.2);
-        }
-
-        .progress-fill {
+        /* Big background text */
+        .bg-word {
             position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            background: linear-gradient(90deg, #6366f1, #00e5ff);
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
-            transition: all 0.3s ease;
-        }
-
-        .skill-details {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-            margin-top: 0;
-            padding-top: 0;
-            border-top: 1px solid transparent;
-            opacity: 0;
-        }
-
-        .skill-box.active .skill-details {
-            max-height: 300px;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            opacity: 1;
-        }
-
-        .skill-details p {
-            font-size: 14px;
-            color: #a0a0a0;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-
-        .tech-badges {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 5px;
-        }
-
-        .badge {
-            background: rgba(0, 229, 255, 0.1);
-            border: 1px solid rgba(0, 229, 255, 0.3);
-            color: #00e5ff;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            font-family: monospace;
-            transition: all 0.3s ease;
-        }
-
-        .toggle-icon {
-            font-size: 14px;
-            color: #555;
-            transition: transform 0.3s ease;
-            margin-left: auto;
-        }
-        body.ar .toggle-icon { margin-left: 0; margin-right: auto; }
-
-        .skill-box.active .toggle-icon {
-            transform: rotate(180deg);
-            color: #6366f1;
-        }
-
-        /* --- [قسم تحدي التشفير التفاعلي الجديد] --- */
-        .challenge-section {
-            padding: 100px 8%;
-            background-color: rgba(24, 24, 32, 0.6);
-            border-top: 1px solid rgba(99, 102, 241, 0.1);
-            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
-            transition: all 0.4s ease;
-        }
-        body.normal-mode .challenge-section {
-            background-color: #f8fafc;
-            border-color: #e2e8f0;
-        }
-        .challenge-container {
-            max-width: 700px;
-            margin: 40px auto 0;
-            background: rgba(17, 17, 21, 0.9);
-            border: 1px solid rgba(0, 229, 255, 0.2);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            text-align: center;
-            transition: all 0.4s ease;
-        }
-        body.normal-mode .challenge-container {
-            background: #ffffff;
-            border-color: #e2e8f0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
-        .cipher-box {
-            background: #09090b;
-            font-family: monospace;
-            color: #22c55e;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 16px;
-            letter-spacing: 1px;
-            margin: 20px 0;
-            border: 1px dashed rgba(34, 197, 94, 0.3);
-            word-break: break-all;
-        }
-        body.normal-mode .cipher-box {
-            background: #f1f5f9;
-            color: #334155;
-            border-color: #cbd5e1;
-        }
-        .challenge-input {
-            width: 100%;
-            background: #111115;
-            border: 1px solid rgba(0, 229, 255, 0.3);
-            color: #00e5ff;
-            padding: 14px;
-            border-radius: 10px;
-            font-size: 15px;
-            outline: none;
-            text-align: center;
-            margin-bottom: 20px;
-            font-family: monospace;
-            transition: all 0.3s ease;
-        }
-        body.normal-mode .challenge-input {
-            background: #ffffff;
-            border-color: #cbd5e1;
-            color: #1e293b;
-        }
-        body.normal-mode .challenge-input:focus { border-color: #6366f1; }
-        .challenge-btn {
-            background: #6366f1;
-            color: white;
-            border: none;
-            padding: 12px 35px;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 15px;
-            transition: all 0.3s ease;
-        }
-        .challenge-btn:hover { background: #4f46e5; transform: translateY(-2px); }
-        .result-message {
-            margin-top: 20px;
-            font-weight: bold;
-            font-size: 15px;
-            font-family: monospace;
-            min-height: 24px;
-        }
-
-        /* --- [تنسيقات مُشغل الموسيقى السيبراني] --- */
-        .audio-player-container {
-            position: fixed;
-            bottom: 25px;
-            left: 25px;
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: opacity 0.4s ease, transform 0.4s ease;
-        }
-        body.ar .audio-player-container {
-            left: auto;
-            right: 25px;
-        }
-
-        .audio-toggle-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: rgba(24, 24, 32, 0.9);
-            border: 1px solid rgba(0, 229, 255, 0.4);
-            color: #00e5ff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .audio-toggle-btn:hover {
-            border-color: #6366f1;
-            color: #6366f1;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
-            transform: scale(1.05);
-        }
-
-        .audio-player-container.playing .audio-toggle-btn {
-            animation: audio-pulse 2s infinite;
-            border-color: #00e5ff;
-            color: #00e5ff;
-        }
-
-        @keyframes audio-pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.5); }
-            70% { box-shadow: 0 0 0 10px rgba(0, 229, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
-        }
-
-        .audio-status-text {
-            background: rgba(17, 17, 21, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(5px);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            color: #a0a0a0;
-            letter-spacing: 1px;
-            max-width: 0;
-            overflow: hidden;
-            white-space: nowrap;
-            transition: max-width 0.4s ease, opacity 0.3s ease;
-            opacity: 0;
+            bottom: -20px;
+            left: 5%;
+            font-family: var(--font-display);
+            font-size: clamp(80px, 12vw, 150px);
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255,255,255,0.04);
+            letter-spacing: 8px;
+            z-index: 0;
             pointer-events: none;
-            font-family: monospace;
-        }
-
-        .audio-player-container:hover .audio-status-text {
-            max-width: 200px;
-            opacity: 1;
-        }
-
-        .audio-status-text span {
-            color: #00e5ff;
-        }
-
-        /* --- قسم التواصل (Contact Section) --- */
-        .contact-section {
-            padding: 100px 8%;
-            background-color: rgba(17, 17, 21, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 50px;
-            transition: all 0.4s ease;
-        }
-
-        .contact-info {
-            box-sizing: border-box;
-            flex: 1;
-        }
-
-        .contact-info p {
-            color: #a0a0a0;
-            font-size: 16px;
-            line-height: 1.8;
-            margin-bottom: 30px;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
             direction: ltr;
         }
 
-        body.ar .info-item {
-            direction: rtl;
+        /* ============================================================
+           STATS SECTION
+        ============================================================ */
+        .stats-section {
+            padding: 60px 7%;
+            background: var(--bg3);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
         }
-
-        body.ar .info-item span[dir="ltr"] {
-            direction: ltr;
-            unicode-bidi: embed;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--border);
         }
-
-        .info-item i {
-            font-size: 20px;
-            color: #00e5ff;
-            background-color: #111115;
-            padding: 15px;
-            border-radius: 50%;
-            border: 1px solid rgba(0,229,255,0.3);
-            transition: all 0.3s ease;
-        }
-
-        .info-item span {
-            color: #ffffff;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        .contact-form {
-            flex: 1;
-            background-color: rgba(24, 24, 32, 0.9);
-            padding: 40px;
-            border-radius: 20px;
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: all 0.4s ease;
-        }
-
-        .input-box {
-            width: 100%;
-            background-color: #111115;
-            border: 1px solid rgba(0,229,255,0.2);
-            color: #00e5ff;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .input-box::placeholder {
-            color: #555;
-        }
-
-        .input-box:focus {
-            border-color: #00e5ff;
-            background-color: #1a1a1f;
-            box-shadow: 0 0 15px rgba(0,229,255,0.2);
-        }
-
-        textarea.input-box {
-            height: 150px;
-            resize: none;
-        }
-
-        /* --- الفوتر --- */
-        .footer {
+        .stat-item {
+            background: var(--bg3);
+            padding: 32px;
             text-align: center;
-            padding: 25px;
-            background-color: #0a0a0c;
-            color: #555;
-            font-size: 14px;
-            border-top: 1px solid rgba(99, 102, 241, 0.2);
-            transition: all 0.4s ease;
-        }
-
-        .footer span {
-            color: #00e5ff;
-            font-weight: bold;
-        }
-
-        /* ==========================================================================
-           قواعد التحويل الحيوية لـ [الوضع العادي - Normal Mode]
-           ========================================================================== */
-        body.normal-mode {
-            background-color: #fafafa;
-            color: #1e293b;
-            background-image: none;
-            cursor: default;
-        }
-
-        body.normal-mode a, body.normal-mode button, body.normal-mode input, body.normal-mode textarea, body.normal-mode .logo, body.normal-mode .cv-btn, body.normal-mode .subscribe-btn {
-            cursor: pointer !important;
-        }
-
-        body.normal-mode .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            border-bottom: 1px solid #e2e8f0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        body.normal-mode .nav-links a { color: #475569; }
-        body.normal-mode .nav-links a:hover { color: #1e293b; }
-        body.normal-mode .nav-links a::after { background: #6366f1; box-shadow: none; }
-        body.normal-mode .logo span { color: #4f46e5; }
-
-        body.normal-mode .lang-btn, body.normal-mode .mode-btn {
-            background: rgba(99, 102, 241, 0.08);
-            border: 1px solid #6366f1;
-            color: #6366f1;
-        }
-        body.normal-mode .lang-btn:hover, body.normal-mode .mode-btn:hover {
-            background: #6366f1;
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
-        }
-
-        body.normal-mode .cyber-terminal, 
-        body.normal-mode .cyber-radar, 
-        body.normal-mode .portfolio-text {
-            display: none !important;
-        }
-
-        body.normal-mode .image-box {
-            align-items: center;
-        }
-
-        body.normal-mode .profile-pic {
             position: relative;
-            right: auto;
-            bottom: auto;
-            width: 420px;
-            border-radius: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-            -webkit-mask-image: none;
-            mask-image: none;
-            filter: none;
+            overflow: hidden;
+            transition: background 0.3s ease;
         }
-
-        body.normal-mode .role { color: #475569; }
-        body.normal-mode .role span { color: #4f46e5; }
-
-        /* --- [تلوين أيقونات التواصل الاجتماعي الثابتة في الوضع العادي] --- */
-        body.normal-mode .social-icons a {
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        .stat-item:hover { background: rgba(24, 24, 40, 0.95); }
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
         }
-        body.normal-mode .social-icons a.gh { color: #24292e; }
-        body.normal-mode .social-icons a.ig { color: #d6249f; }
-        body.normal-mode .social-icons a.in { color: #0077b5; }
-        body.normal-mode .social-icons a.wa { color: #25d366; }
-
-        body.normal-mode .social-icons a.gh:hover { background-color: #24292e; color: #fff; }
-        body.normal-mode .social-icons a.ig:hover { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); color: #fff; border-color: transparent; }
-        body.normal-mode .social-icons a.in:hover { background-color: #0077b5; color: #fff; }
-        body.normal-mode .social-icons a.wa:hover { background-color: #25d366; color: #fff; }
-
-        body.normal-mode .about-section { background-color: #ffffff; }
-        body.normal-mode .tech-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        .stat-item:hover::before { transform: scaleX(1); }
+        .stat-num {
+            font-family: var(--font-display);
+            font-size: 52px;
+            font-weight: 900;
+            letter-spacing: -3px;
+            background: linear-gradient(135deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 8px;
         }
-        body.normal-mode .tech-card::before { display: none; }
-        body.normal-mode .tech-card i { color: #6366f1; filter: none; }
-        body.normal-mode .tech-card h3 { color: #1e293b; }
-        body.normal-mode .about-subtitle { color: #334155; }
-        body.normal-mode .about-text { color: #475569; }
-        body.normal-mode .about-text strong { color: #4f46e5; }
-
-        body.normal-mode .skill-box {
-            background-color: #ffffff;
-            border-left: 4px solid #6366f1;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-        }
-        body.normal-mode.ar .skill-box {
-            border-left: none;
-            border-right: 4px solid #6366f1;
-        }
-        body.normal-mode .skill-box:hover {
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.12);
-        }
-        body.normal-mode .skill-name { color: #1e293b; }
-        body.normal-mode .skill-name i { color: #6366f1; }
-        body.normal-mode .skill-percent { color: #4f46e5; }
-        body.normal-mode .progress-bar { background-color: #f1f5f9; border: 1px solid #e2e8f0; }
-        body.normal-mode .progress-fill { background: linear-gradient(90deg, #4f46e5, #6366f1); box-shadow: none; }
-        body.normal-mode .skill-details p { color: #475569; }
-        body.normal-mode .badge {
-            background: rgba(99, 102, 241, 0.08);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            color: #4f46e5;
-        }
-
-        body.normal-mode .contact-section { background-color: #ffffff; }
-        body.normal-mode .contact-info p { color: #475569; }
-        body.normal-mode .info-item i {
-            color: #6366f1;
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-        }
-        body.normal-mode .info-item span { color: #1e293b; }
-
-        body.normal-mode .contact-form {
-            background-color: #ffffff;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
-        }
-        body.normal-mode .input-box {
-            background-color: #f8fafc;
-            border: 1px solid #cbd5e1;
-            color: #1e293b;
-        }
-        body.normal-mode .input-box:focus {
-            border-color: #6366f1;
-            background-color: #ffffff;
-            box-shadow: 0 0 12px rgba(99, 102, 241, 0.15);
-        }
-        body.normal-mode .input-box::placeholder { color: #94a3b8; }
-
-        body.normal-mode .footer {
-            background-color: #f8fafc;
-            color: #94a3b8;
-            border-top: 1px solid #e2e8f0;
-        }
-        body.normal-mode .footer span { color: #4f46e5; }
-
-        body.normal-mode .audio-player-container {
-            opacity: 0;
-            transform: scale(0.8);
-            pointer-events: none;
-        }
-
-        /* ==========================================================================
-           قواعد التجاوب للشاشات (Media Queries)
-           ========================================================================== */
-        @media (max-width: 1024px) {
-            .navbar { padding: 20px 5%; }
-            .hero-section { padding: 40px 5% 0; flex-direction: column; height: auto; gap: 40px; text-align: center; }
-            .content { max-width: 100% !important; display: flex; flex-direction: column; align-items: center; }
-            body.ar .social-icons, .social-icons { justify-content: center !important; }
-            .name { font-size: 42px; }
-            .portfolio-text { display: none !important; }
-            .image-box { width: 100%; height: 350px; overflow: hidden; }
-            body.normal-mode .image-box { height: auto; overflow: visible; }
-            .cyber-radar { width: 350px; height: 350px; position: relative; top: auto; right: auto; margin: 0 auto; }
-            .profile-pic { width: 450px; bottom: -60px; right: 50%; transform: translateX(50%); }
-            body.normal-mode .profile-pic { width: 100%; max-width: 420px; bottom: auto; right: auto; transform: none; }
-            .about-section, .skills-section, .challenge-section, .contact-section { padding: 60px 5%; flex-direction: column; gap: 40px; text-align: center; }
-            body.ar .about-content .section-title, .about-content .section-title { text-align: center !important; }
-            body.ar .contact-info .section-title, .contact-info .section-title { text-align: center !important; }
-            body.ar .challenge-section .section-title, .challenge-section .section-title { text-align: center !important; }
-            .contact-info p { text-align: center; }
-            .info-item { justify-content: center; }
-            .contact-form, .challenge-container { width: 100%; padding: 20px; }
-            .tech-card { width: 280px; height: 350px; }
-            .skills-container { grid-template-columns: 1fr; gap: 20px; margin-top: 30px; }
-            .audio-player-container { bottom: 15px; left: 15px; }
-            body.ar .audio-player-container { left: auto; right: 15px; }
+        .stat-label {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
         }
 
         @media (max-width: 768px) {
-            .navbar { flex-direction: column; gap: 15px; padding: 15px; text-align: center; }
-            .nav-links { gap: 15px; flex-wrap: wrap; justify-content: center; }
-            .subscribe-btn { padding: 8px 20px; width: 100%; text-align: center; }
-            .name { font-size: 32px; }
-            .role { font-size: 16px; margin-bottom: 20px; }
-            .cv-btn { margin-bottom: 20px; width: 100%; text-align: center; }
-            .image-box { height: 320px; }
-            body.normal-mode .image-box { height: auto; }
-            .cyber-radar { width: 280px; height: 280px; }
-            .profile-pic { width: 300px; bottom: -40px; }
-            body.normal-mode .profile-pic { width: 100%; max-width: 280px; }
-            .about-subtitle { font-size: 16px; }
-            .about-text { font-size: 14px; }
-            .skill-box { padding: 20px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
         }
+
+        /* ============================================================
+           ABOUT SECTION
+        ============================================================ */
+        .about-section {
+            padding: 120px 7%;
+            display: flex;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .about-visual {
+            flex: 1;
+            max-width: 380px;
+        }
+
+        .tilt-card {
+            background: linear-gradient(145deg, var(--bg3), var(--bg2));
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.1s ease, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+        }
+        .tilt-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent 0%, rgba(0,229,255,0.03) 10%, transparent 20%);
+            animation: spin 8s linear infinite;
+        }
+        .tilt-card .card-icon {
+            font-size: 72px;
+            color: var(--accent);
+            filter: drop-shadow(0 0 20px rgba(0,229,255,0.3));
+            margin-bottom: 20px;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+        .tilt-card .card-title {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            position: relative;
+            z-index: 1;
+        }
+        .tilt-card .card-sub {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: 2px;
+            margin-top: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Terminal info block */
+        .about-terminal {
+            margin-top: 20px;
+            background: #000;
+            border: 1px solid rgba(0,229,255,0.15);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .terminal-header {
+            background: rgba(255,255,255,0.04);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .terminal-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+        }
+        .td-red { background: #ff5f56; }
+        .td-yellow { background: #ffbd2e; }
+        .td-green { background: #27c93f; }
+        .terminal-body {
+            padding: 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            line-height: 2;
+        }
+        .t-comment { color: #444; }
+        .t-key { color: var(--primary); }
+        .t-val { color: var(--green); }
+        .t-str { color: #f59e0b; }
+        .t-bracket { color: var(--muted); }
+
+        .about-content { flex: 1.3; }
+
+        .about-text {
+            font-size: 16px;
+            color: var(--muted);
+            line-height: 1.9;
+            margin-bottom: 18px;
+        }
+        .about-text strong { color: var(--accent); font-weight: 600; }
+
+        .cert-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        .cert-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(99,102,241,0.08);
+            border: 1px solid rgba(99,102,241,0.25);
+            color: var(--primary);
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .cert-badge:hover {
+            background: rgba(99,102,241,0.15);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(99,102,241,0.2);
+        }
+        .cert-badge i { font-size: 14px; }
+
+        /* ============================================================
+           SKILLS SECTION
+        ============================================================ */
+        .skills-section {
+            padding: 120px 7%;
+            background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+        }
+        .skills-header { text-align: center; margin-bottom: 70px; }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 20px;
+        }
+
+        .skill-card {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        .skill-card:hover, .skill-card.active {
+            border-color: rgba(0,229,255,0.3);
+            box-shadow: 0 8px 30px rgba(0,229,255,0.08);
+            transform: translateY(-4px);
+        }
+        .skill-card:hover::before, .skill-card.active::before { transform: scaleX(1); }
+
+        .skill-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .skill-name-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-display);
+            font-size: 17px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .skill-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: rgba(0,229,255,0.08);
+            border: 1px solid rgba(0,229,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: 16px;
+        }
+        .skill-pct {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .skill-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        .skill-fill {
+            height: 100%;
+            border-radius: 6px;
+            background: linear-gradient(90deg, var(--primary-dark), var(--accent));
+            box-shadow: 0 0 10px rgba(0,229,255,0.4);
+            width: 0%;
+            transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+        }
+        .skill-fill.animated { /* triggered by JS */ }
+
+        .skill-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--muted);
+            background: none;
+            border: none;
+            padding: 0;
+            transition: color 0.3s;
+        }
+        .skill-toggle:hover { color: var(--accent); }
+        .skill-toggle i { transition: transform 0.3s ease; font-size: 10px; }
+        .skill-card.active .skill-toggle i { transform: rotate(180deg); }
+
+        .skill-expand {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+            opacity: 0;
+        }
+        .skill-card.active .skill-expand {
+            max-height: 200px;
+            opacity: 1;
+        }
+        .skill-desc {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.7;
+            margin-bottom: 12px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .tool-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .chip {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 600;
+            background: rgba(0,229,255,0.06);
+            border: 1px solid rgba(0,229,255,0.2);
+            color: var(--accent);
+            padding: 3px 10px;
+            border-radius: 4px;
+            transition: all 0.25s;
+        }
+        .chip:hover { background: rgba(0,229,255,0.12); }
+
+        /* ============================================================
+           PROJECTS SECTION
+        ============================================================ */
+        .projects-section {
+            padding: 120px 7%;
+            background: var(--bg3);
+            border-top: 1px solid var(--border);
+        }
+        .projects-header { text-align: center; margin-bottom: 70px; }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .project-card {
+            background: var(--bg2);
+            border: 1px solid var(--border2);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .project-card:hover {
+            border-color: rgba(99,102,241,0.5);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .project-card::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 80px; height: 80px;
+            background: radial-gradient(circle, rgba(99,102,241,0.12), transparent);
+            pointer-events: none;
+        }
+
+        .project-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .project-icon-wrap {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+        .project-links { display: flex; gap: 8px; }
+        .project-link {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            font-size: 13px;
+            text-decoration: none;
+            transition: all 0.25s;
+        }
+        .project-link:hover { border-color: var(--accent); color: var(--accent); }
+
+        .project-name {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+        }
+        .project-desc {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+        .project-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: auto;
+        }
+        .stack-tag {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            padding: 3px 9px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: var(--muted);
+        }
+        .project-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+        }
+        .status-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+        .status-dot.green { background: var(--green); box-shadow: 0 0 8px var(--green); }
+        .status-dot.yellow { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+        }
+
+        /* ============================================================
+           CTF CHALLENGE SECTION
+        ============================================================ */
+        .challenge-section {
+            padding: 120px 7%;
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+        }
+        .challenge-header { text-align: center; margin-bottom: 60px; }
+
+        .challenge-wrapper {
+            max-width: 680px;
+            margin: 0 auto;
+            background: var(--bg3);
+            border: 1px solid rgba(0,229,255,0.2);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .challenge-topbar {
+            background: rgba(0,229,255,0.04);
+            border-bottom: 1px solid rgba(0,229,255,0.12);
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--muted);
+        }
+        .challenge-topbar .ctf-badge {
+            background: rgba(34,197,94,0.1);
+            border: 1px solid rgba(34,197,94,0.3);
+            color: var(--green);
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .ctf-icon { color: var(--accent); }
+
+        .challenge-body { padding: 36px; }
+
+        .challenge-desc {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 20px;
+            line-height: 1.7;
+            font-family: var(--font-mono);
+        }
+
+        .cipher-display {
+            background: #000;
+            border: 1px dashed rgba(34,197,94,0.3);
+            border-radius: 10px;
+            padding: 18px 20px;
+            font-family: var(--font-mono);
+            font-size: 15px;
+            color: var(--green);
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+            word-break: break-all;
+            position: relative;
+            overflow: hidden;
+        }
+        .cipher-display::before {
+            content: 'BASE64';
+            position: absolute;
+            top: 6px; right: 10px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: rgba(34,197,94,0.4);
+        }
+        .cipher-scanline {
+            position: absolute;
+            left: 0; right: 0;
+            height: 2px;
+            background: rgba(34,197,94,0.2);
+            animation: scanline 3s linear infinite;
+            pointer-events: none;
+        }
+
+        .challenge-input {
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(0,229,255,0.2);
+            color: var(--accent);
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        .challenge-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(0,229,255,0.12);
+            background: rgba(0,0,0,0.7);
+        }
+        .challenge-input::placeholder { color: rgba(0,229,255,0.25); }
+
+        .challenge-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .ctf-verify-btn {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: #fff;
+            border: none;
+            padding: 13px;
+            border-radius: 10px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        .ctf-verify-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(99,102,241,0.4); }
+        .ctf-hint-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            padding: 13px 20px;
+            border-radius: 10px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        .ctf-hint-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+        .challenge-result {
+            margin-top: 20px;
+            min-height: 24px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .challenge-result.success { color: var(--green); }
+        .challenge-result.fail { color: var(--red); }
+
+        .hint-box {
+            margin-top: 14px;
+            background: rgba(245,158,11,0.06);
+            border: 1px solid rgba(245,158,11,0.2);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: #f59e0b;
+            display: none;
+        }
+        .hint-box.visible { display: block; }
+
+        /* ============================================================
+           CONTACT SECTION
+        ============================================================ */
+        .contact-section {
+            padding: 120px 7%;
+            background: var(--bg2);
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 80px;
+            align-items: flex-start;
+        }
+
+        .contact-left { flex: 1; }
+        .contact-intro {
+            font-size: 15px;
+            color: var(--muted);
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+        .contact-items { display: flex; flex-direction: column; gap: 20px; }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            direction: ltr;
+        }
+        body.ar .contact-item { direction: rtl; }
+        .contact-item-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            background: rgba(99,102,241,0.08);
+            border: 1px solid rgba(99,102,241,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 18px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        .contact-item:hover .contact-item-icon {
+            background: rgba(99,102,241,0.15);
+            box-shadow: 0 0 20px rgba(99,102,241,0.2);
+        }
+        .contact-item-text .label {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 3px;
+        }
+        .contact-item-text .value {
+            font-size: 15px;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .contact-right { flex: 1; }
+        .contact-form-wrap {
+            background: var(--bg3);
+            border: 1px solid var(--border2);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+        .form-control {
+            width: 100%;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.07);
+            color: var(--text);
+            padding: 13px 16px;
+            border-radius: 10px;
+            font-family: var(--font-display);
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+            resize: none;
+        }
+        .form-control::placeholder { color: var(--muted); font-size: 13px; }
+        .form-control:focus {
+            border-color: var(--primary);
+            background: rgba(0,0,0,0.6);
+            box-shadow: 0 0 20px rgba(99,102,241,0.1);
+        }
+        textarea.form-control { height: 140px; }
+
+        .send-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .send-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .send-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(99,102,241,0.4); }
+        .send-btn:hover::after { opacity: 1; }
+
+        /* ============================================================
+           FOOTER
+        ============================================================ */
+        .footer {
+            background: #000;
+            border-top: 1px solid rgba(255,255,255,0.04);
+            padding: 40px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .footer-copy {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--muted);
+        }
+        .footer-copy span { color: var(--primary); font-weight: 700; }
+        .footer-right {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: rgba(100,116,139,0.5);
+            letter-spacing: 1px;
+        }
+
+        /* ============================================================
+           AUDIO PLAYER
+        ============================================================ */
+        .audio-player {
+            position: fixed;
+            bottom: 28px;
+            left: 28px;
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        body.ar .audio-player { left: auto; right: 28px; }
+
+        .audio-btn {
+            width: 46px; height: 46px;
+            border-radius: 50%;
+            background: rgba(8,8,16,0.9);
+            border: 1px solid rgba(0,229,255,0.3);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        .audio-btn:hover { border-color: var(--accent); box-shadow: 0 0 20px rgba(0,229,255,0.3); }
+        .audio-player.playing .audio-btn { animation: audio-pulse 2s infinite; }
+        @keyframes audio-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0,229,255,0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0,229,255,0); }
+            100% { box-shadow: 0 0 0 0 rgba(0,229,255,0); }
+        }
+        .audio-label {
+            background: rgba(8,8,16,0.9);
+            border: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--muted);
+            white-space: nowrap;
+            opacity: 0;
+            max-width: 0;
+            overflow: hidden;
+            transition: max-width 0.4s ease, opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .audio-player:hover .audio-label { max-width: 200px; opacity: 1; }
+        body.normal-mode .audio-player { opacity: 0; pointer-events: none; }
+
+        /* ============================================================
+           NORMAL MODE OVERRIDES
+        ============================================================ */
+        body.normal-mode {
+            background: #f8fafc;
+            color: #1e293b;
+        }
+        body.normal-mode .navbar {
+            background: rgba(248,250,252,0.95);
+            border-bottom: 1px solid #e2e8f0;
+        }
+        body.normal-mode .logo, body.normal-mode .logo .logo-name { color: #1e293b; }
+        body.normal-mode .nav-links a { color: #475569; }
+        body.normal-mode .nav-links a:hover { color: #1e293b; background: rgba(99,102,241,0.05); border-color: #e2e8f0; }
+        body.normal-mode .nav-btn { border-color: #6366f1; color: #6366f1; }
+        body.normal-mode .nav-btn:hover { background: #6366f1; color: #fff; }
+        body.normal-mode .nav-btn.mode-btn { border-color: #6366f1; color: #6366f1; }
+        body.normal-mode .contact-nav-btn { background: #6366f1; }
+
+        body.normal-mode .hero-section { background: #f8fafc; }
+        body.normal-mode .hero-grid { display: none; }
+        body.normal-mode .hero-glow { display: none; }
+        body.normal-mode .terminal-badge { display: none; }
+        body.normal-mode .hex-ring { display: none; }
+        body.normal-mode .tech-float { display: none; }
+        body.normal-mode .hero-scanline { display: none; }
+        body.normal-mode .bg-word { display: none; }
+        body.normal-mode .hero-name { color: #1e293b; }
+        body.normal-mode .hero-role { color: #475569; }
+        body.normal-mode .hero-role .typed-role { color: #4f46e5; }
+        body.normal-mode .hero-image-wrap { position: relative; left: auto; transform: none; bottom: auto; }
+        body.normal-mode .hero-image-wrap img {
+            -webkit-mask-image: none; mask-image: none;
+            filter: none;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 340px;
+        }
+        body.normal-mode .hero-visual { height: auto; justify-content: center; align-items: center; }
+        body.normal-mode .social-btn { background: #fff; border-color: #e2e8f0; color: #475569; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+
+        body.normal-mode .stats-section { background: #fff; border-color: #e2e8f0; }
+        body.normal-mode .stats-grid { background: #e2e8f0; }
+        body.normal-mode .stat-item { background: #fff; }
+        body.normal-mode .stat-num { background: linear-gradient(135deg, #1e293b, #4f46e5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        body.normal-mode .stat-label { color: #94a3b8; }
+
+        body.normal-mode .about-section { background: #f8fafc; }
+        body.normal-mode .tilt-card { background: #fff; border-color: #e2e8f0; }
+        body.normal-mode .tilt-card::before { display: none; }
+        body.normal-mode .tilt-card .card-icon { color: #4f46e5; filter: none; }
+        body.normal-mode .tilt-card .card-title { color: #1e293b; }
+        body.normal-mode .about-terminal { background: #f1f5f9; border-color: #e2e8f0; }
+        body.normal-mode .terminal-header { background: #e2e8f0; border-color: #cbd5e1; }
+        body.normal-mode .t-comment { color: #94a3b8; }
+        body.normal-mode .t-key { color: #4f46e5; }
+        body.normal-mode .t-val { color: #16a34a; }
+        body.normal-mode .t-str { color: #b45309; }
+        body.normal-mode .about-text { color: #475569; }
+        body.normal-mode .about-text strong { color: #4f46e5; }
+        body.normal-mode .cert-badge { background: rgba(99,102,241,0.05); color: #4f46e5; border-color: rgba(99,102,241,0.2); }
+
+        body.normal-mode .skills-section { background: #fff; }
+        body.normal-mode .skill-card { background: #f8fafc; border-color: #e2e8f0; }
+        body.normal-mode .skill-card:hover, body.normal-mode .skill-card.active { background: #fff; border-color: #cbd5e1; box-shadow: 0 8px 30px rgba(0,0,0,0.06); }
+        body.normal-mode .skill-name-row { color: #1e293b; }
+        body.normal-mode .skill-icon { background: rgba(99,102,241,0.06); border-color: rgba(99,102,241,0.15); color: #4f46e5; }
+        body.normal-mode .skill-pct { color: #4f46e5; }
+        body.normal-mode .skill-bar { background: #e2e8f0; }
+        body.normal-mode .skill-fill { background: linear-gradient(90deg, #4f46e5, #6366f1); box-shadow: none; }
+        body.normal-mode .skill-desc { color: #475569; border-color: #e2e8f0; }
+        body.normal-mode .chip { background: rgba(99,102,241,0.05); border-color: rgba(99,102,241,0.15); color: #4f46e5; }
+
+        body.normal-mode .projects-section { background: #f8fafc; border-color: #e2e8f0; }
+        body.normal-mode .project-card { background: #fff; border-color: #e2e8f0; }
+        body.normal-mode .project-name { color: #1e293b; }
+        body.normal-mode .project-desc { color: #475569; }
+        body.normal-mode .stack-tag { background: #f1f5f9; border-color: #e2e8f0; color: #64748b; }
+        body.normal-mode .project-link { border-color: #e2e8f0; color: #64748b; }
+
+        body.normal-mode .challenge-section { background: #f8fafc; border-color: #e2e8f0; }
+        body.normal-mode .challenge-wrapper { background: #fff; border-color: #e2e8f0; }
+        body.normal-mode .challenge-topbar { background: #f8fafc; border-color: #e2e8f0; }
+        body.normal-mode .cipher-display { background: #f1f5f9; border-color: #cbd5e1; color: #16a34a; }
+        body.normal-mode .challenge-input { background: #f8fafc; border-color: #cbd5e1; color: #4f46e5; }
+        body.normal-mode .challenge-input:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+
+        body.normal-mode .contact-section { background: #fff; }
+        body.normal-mode .contact-intro { color: #475569; }
+        body.normal-mode .contact-item-icon { background: rgba(99,102,241,0.05); border-color: rgba(99,102,241,0.15); color: #4f46e5; }
+        body.normal-mode .contact-item-text .label { color: #94a3b8; }
+        body.normal-mode .contact-item-text .value { color: #1e293b; }
+        body.normal-mode .contact-form-wrap { background: #f8fafc; border-color: #e2e8f0; }
+        body.normal-mode .form-label { color: #64748b; }
+        body.normal-mode .form-control { background: #fff; border-color: #e2e8f0; color: #1e293b; }
+        body.normal-mode .form-control:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.08); }
+
+        body.normal-mode .footer { background: #f1f5f9; border-color: #e2e8f0; }
+        body.normal-mode .footer-copy { color: #94a3b8; }
+        body.normal-mode .footer-right { color: #cbd5e1; }
+
+        /* ============================================================
+           RESPONSIVE
+        ============================================================ */
+        @media (max-width: 1024px) {
+            .hero-section { flex-direction: column; text-align: center; padding-top: 110px; }
+            .hero-content { max-width: 100%; }
+            .hero-eyebrow, .hero-cta-row, .social-row { justify-content: center; }
+            .hero-visual { height: 380px; width: 100%; max-width: 100%; }
+            .hex-ring:nth-child(1) { width: 340px; height: 340px; }
+            .hex-ring:nth-child(2) { width: 280px; height: 280px; }
+            .hex-ring:nth-child(3) { width: 380px; height: 380px; }
+            .hero-image-wrap img { width: 300px; }
+            .hero-scanline { width: 300px; }
+            .bg-word { display: none; }
+            .tech-float { display: none; }
+            .about-section { flex-direction: column; align-items: center; }
+            .about-visual { max-width: 100%; }
+            .tilt-card { width: 100%; max-width: 380px; }
+            .contact-section { flex-direction: column; }
+        }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 16px 5%; }
+            .nav-links, .contact-nav-btn { display: none; }
+            .hamburger { display: flex; }
+            .hero-section { padding: 0 5%; padding-top: 100px; }
+            .about-section, .skills-section, .projects-section, .challenge-section, .contact-section { padding: 80px 5%; }
+            .stats-section { padding: 40px 5%; }
+            .skills-grid, .projects-grid { grid-template-columns: 1fr; }
+            .footer { flex-direction: column; text-align: center; padding: 30px 5%; }
+        }
+
+        /* ============================================================
+           AR SPECIFIC
+        ============================================================ */
+        body.ar .hero-eyebrow::before { display: none; }
+        body.ar .divider-line { background: linear-gradient(270deg, var(--primary), transparent); }
+        body.ar .divider-line.right { background: linear-gradient(90deg, var(--primary), transparent); }
+        body.ar .skill-card::before { transform-origin: right; }
+        body.ar .about-terminal { direction: ltr; }
     </style>
 </head>
-<body class="en hacker-mode"> 
-    <nav class="navbar">
-        <div class="logo glitch">
-            Mohsen<span>Alsharafi</span>
+<body class="en hacker-mode">
+
+<!-- Custom Cursor -->
+<div id="cursor-outer"></div>
+<div id="cursor-dot"></div>
+
+<!-- Boot Screen -->
+<div id="boot-screen">
+    <div class="boot-lines" id="boot-lines"></div>
+    <div class="boot-bar-wrap">
+        <div class="boot-bar" id="boot-bar"></div>
+    </div>
+    <div class="boot-percent" id="boot-percent">0%</div>
+</div>
+
+<!-- Matrix Canvas -->
+<canvas id="matrix-canvas"></canvas>
+
+<!-- Section Progress -->
+<nav id="section-progress">
+    <div class="progress-dot active" data-section="hero" data-label="HOME" onclick="scrollToSection('hero')"></div>
+    <div class="progress-dot" data-section="stats" data-label="STATS" onclick="scrollToSection('stats')"></div>
+    <div class="progress-dot" data-section="about" data-label="ABOUT" onclick="scrollToSection('about')"></div>
+    <div class="progress-dot" data-section="skills" data-label="SKILLS" onclick="scrollToSection('skills')"></div>
+    <div class="progress-dot" data-section="projects" data-label="PROJECTS" onclick="scrollToSection('projects')"></div>
+    <div class="progress-dot" data-section="challenge" data-label="CTF" onclick="scrollToSection('challenge')"></div>
+    <div class="progress-dot" data-section="contact" data-label="CONTACT" onclick="scrollToSection('contact')"></div>
+</nav>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+    <a href="#" class="logo" onclick="return false;">
+        <span class="logo-bracket">[</span>
+        <span class="logo-name">Mohsen</span><span class="logo-accent">Alsharafi</span>
+        <span class="logo-bracket">]</span>
+        <span class="logo-blink"></span>
+    </a>
+    <ul class="nav-links">
+        <li><a href="#about"><span class="nav-num">01.</span><span class="en-text">About</span><span class="ar-text">نبذة</span></a></li>
+        <li><a href="#skills"><span class="nav-num">02.</span><span class="en-text">Skills</span><span class="ar-text">مهارات</span></a></li>
+        <li><a href="#projects"><span class="nav-num">03.</span><span class="en-text">Projects</span><span class="ar-text">مشاريع</span></a></li>
+        <li><a href="#challenge"><span class="nav-num">04.</span>CTF</a></li>
+        <li><button class="nav-btn" onclick="toggleLanguage()" id="lang-btn">AR</button></li>
+        <li><button class="nav-btn mode-btn" onclick="toggleMode()" id="mode-btn">Normal Mode</button></li>
+    </ul>
+    <a href="#contact" class="contact-nav-btn"><span class="en-text">Contact Me</span><span class="ar-text">تواصل معي</span></a>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+    <a href="#about" onclick="toggleMenu()"><span class="en-text">About Me</span><span class="ar-text">نبذة عني</span></a>
+    <a href="#skills" onclick="toggleMenu()"><span class="en-text">Skills</span><span class="ar-text">المهارات</span></a>
+    <a href="#projects" onclick="toggleMenu()"><span class="en-text">Projects</span><span class="ar-text">المشاريع</span></a>
+    <a href="#challenge" onclick="toggleMenu()">CTF Challenge</a>
+    <a href="#contact" onclick="toggleMenu()"><span class="en-text">Contact Me</span><span class="ar-text">تواصل معي</span></a>
+    <button class="nav-btn" onclick="toggleLanguage(); toggleMenu();" style="width:fit-content;" id="lang-btn-m">AR</button>
+    <button class="nav-btn mode-btn" onclick="toggleMode(); toggleMenu();" style="width:fit-content;" id="mode-btn-m">Normal Mode</button>
+</div>
+
+<!-- ============================================================
+     HERO SECTION
+============================================================ -->
+<section class="hero-section" id="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+
+    <div class="hero-content">
+        <div class="terminal-badge" dir="ltr">
+            <span class="prompt">root@mohsen:~#</span>
+            <span id="typewriter"></span><span class="blink">▊</span>
         </div>
-        <ul class="nav-links">
-            <li><a href="#"><span class="en-text">Home</span><span class="ar-text">الرئيسية</span></a></li>
-            <li><a href="#about"><span class="en-text">About Me</span><span class="ar-text">نبذة عني</span></a></li>
-            <li><a href="#skills"><span class="en-text">Skills</span><span class="ar-text">المهارات</span></a></li>
-            <li><button class="lang-btn" onclick="toggleLanguage()" id="lang-toggle-btn">AR</button></li>
-            <li><button class="mode-btn" onclick="toggleMode()" id="mode-toggle-btn">Normal Mode</button></li>
-        </ul>
-        <a href="#contact" class="subscribe-btn">
-            <span class="en-text">Contact Me</span>
-            <span class="ar-text">تواصل معي</span>
-        </a>
-    </nav>
 
-    <section class="hero-section">
-        <div class="content">
-            <div class="cyber-terminal" dir="ltr">
-                <span class="prompt">root@mohsen:~#</span><span id="typewriter"></span><span class="cursor-blink">_</span>
-            </div>
+        <div class="hero-eyebrow en-text">Cybersecurity Specialist</div>
+        <div class="hero-eyebrow ar-text" style="justify-content:flex-end;">متخصص أمن سيبراني</div>
 
-            <h1 class="name glitch">
-                <span class="en-text">Mohsen <span>Alsharafi</span></span>
-                <span class="ar-text">محسن <span>الشرفي</span></span>
-            </h1>
-            <p class="role">
-                <span class="en-text">I'm a <span>Cybersecurity</span> Student & Enthusiast.</span>
-                <span class="ar-text">أنا طالب وشغوف بـ <span>الأمن السيبراني</span>.</span>
-            </p>
+        <h1 class="hero-name reveal">
+            <span class="en-text">Mohsen<br><span class="highlight">Alsharafi</span></span>
+            <span class="ar-text">محسن<br><span class="highlight">الشرفي</span></span>
+        </h1>
 
-            <a href="Files/Mohsen_CV_EN.pdf" target="_blank" class="cv-btn en-text">Download CV</a>
-            <a href="Files/Mohsen_CV_AR.pdf" target="_blank" class="cv-btn ar-text">تحميل السيرة الذاتية</a>
+        <p class="hero-role reveal reveal-delay-1">
+            <span class="en-text">
+                I'm a <span class="typed-role" id="typed-role">Cybersecurity Student</span><span class="role-cursor"></span>
+            </span>
+            <span class="ar-text">
+                أنا <span class="typed-role" id="typed-role-ar">طالب أمن سيبراني</span><span class="role-cursor"></span>
+            </span>
+        </p>
 
-            <div class="social-icons" dir="ltr">
-                <a href="https://github.com/ov6ho" target="_blank" class="gh" title="GitHub"><i class="fab fa-github"></i></a>
-                <a href="https://www.instagram.com/ov6ho/" target="_blank" class="ig" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.linkedin.com/in/mohsen-f-alsharafi-6378b2346" target="_blank" class="in" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                <a href="https://wa.me/601162020336" target="_blank" class="wa" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-            </div>
-        </div>
-
-        <div class="image-box">
-            <div class="cyber-radar"></div>
-            <img src="Images/me.png" alt="Mohsen Profile Picture" class="profile-pic" />
-        </div>
-
-        <div class="portfolio-text">
-            <span>P</span><span>o</span><span>r</span><span>t</span><span>f</span><span>o</span><span>l</span><span>i</span><span>o</span>
-        </div>
-    </section>
-
-    <section class="about-section" id="about">
-        <div class="about-image-container">
-            <div class="tech-card">
-                <i class="fas fa-shield-alt"></i>
-                <h3 class="en-text">Cyber Security</h3>
-                <h3 class="ar-text">الأمن السيبراني</h3>
-            </div>
-        </div>
-
-        <div class="about-content">
-            <h2 class="section-title">
-                <span class="en-text">About <span>Me</span></span>
-                <span class="ar-text">نبذة <span>عني</span></span>
-            </h2>
-            <h3 class="about-subtitle">
-                <span class="en-text">BSc Computer Science (Cyber Security) Student</span>
-                <span class="ar-text">طالب بكالوريوس علوم حاسب (تخصص أمن سيبراني)</span>
-            </h3>
-
-            <p class="about-text en-text">
-                I am a dedicated Computer Science student specializing in <strong>Cyber Security</strong>. My passion lies in understanding how complex digital systems work and, more importantly, how to protect them from evolving digital threats.
-            </p>
-            <p class="about-text en-text">
-                Currently pursuing my Bachelor's degree, I am actively building a strong foundation in both offensive and defensive security strategies. I spend my time exploring network security, ethical hacking, and vulnerability assessments, constantly setting up virtual labs to test my knowledge.
-            </p>
-            <p class="about-text en-text">
-                I am on a continuous learning journey, preparing for industry-recognized certifications like <strong>CompTIA Security+, CEH, and PenTest+</strong>. Whether it's analyzing network traffic or securing web environments, I am driven by the dynamic challenges that the cybersecurity field offers.
-            </p>
-
-            <p class="about-text ar-text">
-                أنا طالب مخصص في علوم الحاسب ومصنف في <strong>الأمن السيبراني</strong>. يكمن شغفي في فهم كيفية عمل الأنظمة الرقمية المعقدة، والأهم من ذلك, كيفية حمايتها من التهديدات الرقمية المتطورة.
-            </p>
-            <p class="about-text ar-text">
-                أتابع حالياً دراستي لنيل درجة البكالوريوس، حيث أعمل بجد على بناء أساس قوي في استراتيجيات الأمن الهجومي والدفاعي. أقضي وقتي في استكشاف أمن الشبكات، الاختراق الأخلاقي، وتقييم الثغرات الأمنية، مع إعداد مختبرات افتراضية باستمرار لاختبار مهاراتي التقنية.
-            </p>
-            <p class="about-text ar-text">
-                أنا في رحلة تعلم مستمرة، وأستعد للحصول على شهادات معترف بها في المجال مثل <strong>CompTIA Security+ و CEH و PenTest+</strong>. سواء كان ذلك بتحليل حركة مرور الشبكة أو تأمين بيئات الويب، فإنني مدفوع بالتحديات المتجددة التي يوفرها هذا المجال التقني.
-            </p>
-
-            <a href="#contact" class="cv-btn" style="margin-top: 15px;">
-                <span class="en-text">Contact Me</span>
-                <span class="ar-text">تواصل معي</span>
+        <div class="hero-cta-row reveal reveal-delay-2">
+            <a href="Files/Mohsen_CV_EN.pdf" target="_blank" class="btn-primary en-text">
+                <i class="fas fa-download"></i> Download CV
             </a>
+            <a href="Files/Mohsen_CV_AR.pdf" target="_blank" class="btn-primary ar-text">
+                <i class="fas fa-download"></i> تحميل السيرة الذاتية
+            </a>
+            <a href="#contact" class="btn-outline en-text"><i class="fas fa-paper-plane"></i> Hire Me</a>
+            <a href="#contact" class="btn-outline ar-text"><i class="fas fa-paper-plane"></i> تواصل معي</a>
         </div>
-    </section>
 
-    <section class="skills-section" id="skills">
-        <h2 class="section-title" style="text-align: center;">
-            <span class="en-text">My <span>Technical Skills</span></span>
-            <span class="ar-text">مهاراتي <span>التقنية</span></span>
-        </h2>
-
-        <div class="skills-container">
-            <div class="skill-box" onclick="toggleSkill(this)">
-                <div class="skill-info">
-                    <span class="skill-name">
-                        <i class="fas fa-network-wired"></i> 
-                        <span class="en-text">Network Security</span><span class="ar-text">أمن الشبكات</span>
-                    </span>
-                    <span class="skill-percent">95%</span>
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="progress-bar"><div class="progress-fill" style="width: 95%;"></div></div>
-                <div class="skill-details">
-                    <p class="en-text">Experienced in designing secure network topologies, configuring firewalls, and conducting traffic analysis to detect and mitigate malicious activities.</p>
-                    <p class="ar-text">خبرة متقدمة في تصميم البنيات الشبكية الآمنة، إعداد الجدران النارية، وتحليل حركة المرور (Traffic) لكشف الأنشطة الخبيثة وصدها.</p>
-                    <div class="tech-badges">
-                        <span class="badge">Wireshark</span><span class="badge">Cisco Packet Tracer</span><span class="badge">Firewalls</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="skill-box" onclick="toggleSkill(this)">
-                <div class="skill-info">
-                    <span class="skill-name">
-                        <i class="fas fa-user-secret"></i> 
-                        <span class="en-text">Ethical Hacking</span><span class="ar-text">الاختراق الأخلاقي</span>
-                    </span>
-                    <span class="skill-percent">80%</span>
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="progress-bar"><div class="progress-fill" style="width: 80%;"></div></div>
-                <div class="skill-details">
-                    <p class="en-text">Proficient in offensive security methodologies, executing penetration testing simulations, and discovering exploits within standalone systems.</p>
-                    <p class="ar-text">متمكن من منهجيات الأمن الهجومي، محاكاة اختبارات الاختراق الشاملة، واستغلال الثغرات البرمجية في الأنظمة والشبكات بشكل أخلاقي.</p>
-                    <div class="tech-badges">
-                        <span class="badge">Nmap</span><span class="badge">Metasploit</span><span class="badge">Burp Suite</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="skill-box" onclick="toggleSkill(this)">
-                <div class="skill-info">
-                    <span class="skill-name">
-                        <i class="fab fa-linux"></i> 
-                        <span class="en-text">Linux & Bash Scripting</span><span class="ar-text">نظام لينكس وسكربتات باش</span>
-                    </span>
-                    <span class="skill-percent">90%</span>
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="progress-bar"><div class="progress-fill" style="width: 90%;"></div></div>
-                <div class="skill-details">
-                    <p class="en-text">Solid understanding of Linux server administration, user access control auditing, and writing automation scripts using Bash to streamline workflows.</p>
-                    <p class="ar-text">إدارة كاملة لأنظمة سيرفرات لينكس، مراجعة صلاحيات الوصول للمستخدمين، وكتابة سكربتات أتمتة قوية بواسطة Bash لتسريع العمليات.</p>
-                    <div class="tech-badges">
-                        <span class="badge">Kali Linux</span><span class="badge">Ubuntu Server</span><span class="badge">Bash</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="skill-box" onclick="toggleSkill(this)">
-                <div class="skill-info">
-                    <span class="skill-name">
-                        <i class="fab fa-python"></i> 
-                        <span class="en-text">Python for Security</span><span class="ar-text">لغة بايثون للحماية</span>
-                    </span>
-                    <span class="skill-percent">85%</span>
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="progress-bar"><div class="progress-fill" style="width: 85%;"></div></div>
-                <div class="skill-details">
-                    <p class="en-text">Developing customized automation tools, scripting custom network scanners, parsing log files, and creating security tools for quick incident responses.</p>
-                    <p class="ar-text">تطوير أدوات أمنية مخصصة، برمجة ماسحات الشبكة الذكية، تحليل سجلات النظام (Logs)، وبناء أدوات برمجية للاستجابة السريعة للحوادث الأمنية.</p>
-                    <div class="tech-badges">
-                        <span class="badge">Python 3</span><span class="badge">Scapy</span><span class="badge">Socket Programming</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="skill-box" onclick="toggleSkill(this)">
-                <div class="skill-info">
-                    <span class="skill-name">
-                        <i class="fas fa-bug"></i> 
-                        <span class="en-text">Vulnerability Assessment</span><span class="ar-text">تقييم وتحليل الثغرات</span>
-                    </span>
-                    <span class="skill-percent">75%</span>
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="progress-bar"><div class="progress-fill" style="width: 75%;"></div></div>
-                <div class="skill-details">
-                    <p class="en-text">Utilizing automated scanning tools to discover infrastructure vulnerabilities, generating technical reports, and mapping risk prioritize for patching.</p>
-                    <p class="ar-text">استخدام برمجيات الفحص المؤتمتة لاكتشاف الثغرات في البنية التحتية، صياغة التقارير الفنية، وترتيب أولويات المخاطر للبدء بترقيعها.</p>
-                    <div class="tech-badges">
-                        <span class="badge">Nessus</span><span class="badge">OpenVAS</span><span class="badge">Risk Management</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="skill-box" onclick="toggleSkill(this)">
-                <div class="skill-info">
-                    <span class="skill-name">
-                        <i class="fas fa-code"></i> 
-                        <span class="en-text">Web App Security</span><span class="ar-text">أمن تطبيقات الويب</span>
-                    </span>
-                    <span class="skill-percent">80%</span>
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="progress-bar"><div class="progress-fill" style="width: 80%;"></div></div>
-                <div class="skill-details">
-                    <p class="en-text">Testing web applications against the OWASP Top 10 vulnerabilities, auditing forms against SQL injection, and securing site cookies/session objects.</p>
-                    <p class="ar-text">فحص برمجيات الويب ضد ثغرات OWASP Top 10 العالمية، حماية المدخلات من ثغرات حقن القواعد (SQLi)، وتأمين ملفات الارتباط وجلسات المستخدمين.</p>
-                    <div class="tech-badges">
-                        <span class="badge">OWASP Top 10</span><span class="badge">XSS / SQLi Auditing</span><span class="badge">DVWA</span>
-                    </div>
-                </div>
-            </div>
+        <div class="social-row reveal reveal-delay-3">
+            <a href="https://github.com/ov6ho" target="_blank" class="social-btn gh" title="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://www.instagram.com/ov6ho/" target="_blank" class="social-btn ig" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.linkedin.com/in/mohsen-f-alsharafi-6378b2346" target="_blank" class="social-btn in" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://wa.me/601162020336" target="_blank" class="social-btn wa" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
         </div>
-    </section>
-
-    <!-- [قسم تحدي التشفير التفاعلي الجديد (CTF Challenge)] -->
-    <section class="challenge-section" id="challenge">
-        <h2 class="section-title" style="text-align: center;">
-            <span class="en-text">Cybersecurity <span>Challenge</span></span>
-            <span class="ar-text">التحدي <span>السيبراني</span></span>
-        </h2>
-        <div class="challenge-container">
-            <p class="en-text">Can you decrypt the following Base64 token to reveal the access key?</p>
-            <p class="ar-text">هل يمكنك فك تشفير الـ Token التالي المكتوب بـ Base64 لاستخراج مفتاح الدخول؟</p>
-            <div class="cipher-box">TW9oc2VuX0N5YmVyU2VjXzIwMjY=</div>
-            <input type="text" id="challenge-input" placeholder="Enter decrypted key here..." class="challenge-input">
-            <button class="challenge-btn" onclick="checkChallenge()">Verify Key</button>
-            <div id="challenge-result" class="result-message"></div>
-        </div>
-    </section>
-
-    <div class="audio-player-container" id="cyber-audio-container">
-        <button class="audio-toggle-btn" onclick="toggleAudio()" id="audio-btn" title="Cyber Ambient Music">
-            <i class="fas fa-volume-mute" id="audio-icon"></i>
-        </button>
-        <div class="audio-status-text">
-            <span class="en-text">SYSTEM: <span>AMBIENT_OFF</span></span>
-            <span class="ar-text">النظام: <span>الموسيقى_مغلقة</span></span>
-        </div>
-        <audio id="cyber-audio" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"></audio>
     </div>
 
-    <section class="contact-section" id="contact">
-        <div class="contact-info">
-            <h2 class="section-title">
-                <span class="en-text">Get In <span>Touch</span></span>
-                <span class="ar-text">تواصل <span>معي</span></span>
-            </h2>
-            <p class="en-text">I am currently open for new opportunities, collaborations, or even a friendly chat about cybersecurity and tech. Feel free to drop a message!</p>
-            <p class="ar-text">أنا متاح حالياً للفرص الجديدة، أو التعاون المشترك، أو حتى لإجراء محادثة ودية حول الأمن السيبراني والتقنية. لا تتردد في إرسال رسالة!</p>
+    <div class="hero-visual">
+        <div class="hex-ring"></div>
+        <div class="hex-ring"></div>
+        <div class="hex-ring"></div>
+        <div class="tech-float">Kali Linux</div>
+        <div class="tech-float">Metasploit</div>
+        <div class="tech-float">Wireshark</div>
+        <div class="tech-float">Python 3</div>
+        <div class="hero-image-wrap">
+            <img src="Images/me.png" alt="Mohsen Alsharafi" />
+        </div>
+        <div class="hero-scanline">
+            <div class="cipher-scanline"></div>
+        </div>
+    </div>
 
-            <div class="info-item">
-                <i class="fas fa-envelope"></i>
-                <span dir="ltr">mohsen110099@gmail.com</span>
+    <div class="bg-word">SECURITY</div>
+</section>
+
+<!-- ============================================================
+     STATS SECTION
+============================================================ -->
+<section class="stats-section" id="stats">
+    <div class="stats-grid">
+        <div class="stat-item reveal">
+            <div class="stat-num" data-target="6">0</div>
+            <div class="stat-label en-text">+ Skills Mastered</div>
+            <div class="stat-label ar-text">+ مهارة متقنة</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-1">
+            <div class="stat-num" data-target="10">0</div>
+            <div class="stat-label en-text">+ Projects Built</div>
+            <div class="stat-label ar-text">+ مشروع منجز</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-2">
+            <div class="stat-num" data-target="3">0</div>
+            <div class="stat-label en-text">Certs In Progress</div>
+            <div class="stat-label ar-text">شهادات قيد الإنجاز</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-3">
+            <div class="stat-num" data-target="100">0</div>
+            <div class="stat-label en-text">% Commitment</div>
+            <div class="stat-label ar-text">% التزام واجتهاد</div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     ABOUT SECTION
+============================================================ -->
+<section class="about-section" id="about">
+    <div class="about-visual">
+        <div class="tilt-card reveal" id="tilt-card">
+            <i class="fas fa-shield-alt card-icon"></i>
+            <div class="card-title en-text">Cyber Security</div>
+            <div class="card-title ar-text">الأمن السيبراني</div>
+            <div class="card-sub en-text">DEFENSE &amp; OFFENSE</div>
+            <div class="card-sub ar-text">هجوم ودفاع</div>
+        </div>
+
+        <div class="about-terminal reveal reveal-delay-1">
+            <div class="terminal-header">
+                <span class="terminal-dot td-red"></span>
+                <span class="terminal-dot td-yellow"></span>
+                <span class="terminal-dot td-green"></span>
+                <span style="margin-left:8px; font-family:var(--font-mono); font-size:11px; color:var(--muted);">whoami.json</span>
             </div>
-            <div class="info-item">
-                <i class="fas fa-map-marker-alt"></i>
-                <span class="en-text">Asia Pacific University (APU), Malaysia</span>
-                <span class="ar-text">جامعة آسيا والمحيط الهادئ للتكنولوجيا والابتكار (APU)، ماليزيا</span>
+            <div class="terminal-body">
+                <span class="t-bracket">{</span><br>
+                &nbsp;&nbsp;<span class="t-key">"name"</span><span class="t-bracket">:</span> <span class="t-str">"Mohsen Alsharafi"</span>,<br>
+                &nbsp;&nbsp;<span class="t-key">"role"</span><span class="t-bracket">:</span> <span class="t-str">"Cybersec Student"</span>,<br>
+                &nbsp;&nbsp;<span class="t-key">"location"</span><span class="t-bracket">:</span> <span class="t-str">"APU, Malaysia"</span>,<br>
+                &nbsp;&nbsp;<span class="t-key">"status"</span><span class="t-bracket">:</span> <span class="t-val">available</span>,<br>
+                &nbsp;&nbsp;<span class="t-key">"ctf"</span><span class="t-bracket">:</span> <span class="t-val">true</span><br>
+                <span class="t-bracket">}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="about-content">
+        <span class="section-tag en-text">// ABOUT_ME</span>
+        <span class="section-tag ar-text">// نبذة_عني</span>
+        <h2 class="section-title reveal">
+            <span class="en-text">About <span class="accent-word">Me</span></span>
+            <span class="ar-text">نبذة <span class="accent-word">عني</span></span>
+        </h2>
+
+        <p class="about-text reveal reveal-delay-1 en-text">
+            I am a dedicated Computer Science student specializing in <strong>Cyber Security</strong>. My passion lies in understanding how complex digital systems work and, more importantly, how to protect them from evolving threats.
+        </p>
+        <p class="about-text reveal reveal-delay-2 en-text">
+            Currently pursuing my Bachelor's degree at <strong>APU Malaysia</strong>, I am actively building a strong foundation in both offensive and defensive security. I spend my time exploring network security, ethical hacking, and vulnerability assessments, constantly setting up virtual labs to test my knowledge.
+        </p>
+        <p class="about-text reveal reveal-delay-3 en-text">
+            I am on a continuous learning journey, preparing for certifications like <strong>CompTIA Security+, CEH, and PenTest+</strong>. Whether analyzing network traffic or securing web environments, I am driven by the dynamic challenges that cybersecurity offers.
+        </p>
+
+        <p class="about-text reveal reveal-delay-1 ar-text">
+            أنا طالب متخصص في <strong>الأمن السيبراني</strong>، شغوف بفهم كيفية عمل الأنظمة الرقمية المعقدة والأهم كيفية حمايتها من التهديدات الحديثة.
+        </p>
+        <p class="about-text reveal reveal-delay-2 ar-text">
+            أتابع دراستي في <strong>جامعة APU بماليزيا</strong>، حيث أبني أساساً متيناً في استراتيجيات الأمن الهجومي والدفاعي. أقضي وقتي في استكشاف أمن الشبكات والاختراق الأخلاقي وتقييم الثغرات.
+        </p>
+        <p class="about-text reveal reveal-delay-3 ar-text">
+            أستعد للحصول على شهادات معترف بها مثل <strong>CompTIA Security+ و CEH و PenTest+</strong>، وأنا مدفوع دائماً بالتحديات المتجددة التي يوفرها هذا المجال التقني.
+        </p>
+
+        <div class="cert-badges reveal reveal-delay-4">
+            <span class="cert-badge"><i class="fas fa-certificate"></i>CompTIA Security+</span>
+            <span class="cert-badge"><i class="fas fa-user-secret"></i>CEH</span>
+            <span class="cert-badge"><i class="fas fa-bug"></i>PenTest+</span>
+            <span class="cert-badge"><i class="fab fa-linux"></i>Linux+</span>
+        </div>
+
+        <div style="margin-top:30px;" class="reveal reveal-delay-5">
+            <a href="#contact" class="btn-primary" style="display:inline-flex;">
+                <span class="en-text"><i class="fas fa-paper-plane"></i> Get In Touch</span>
+                <span class="ar-text"><i class="fas fa-paper-plane"></i> تواصل معي</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     SKILLS SECTION
+============================================================ -->
+<section class="skills-section" id="skills">
+    <div class="skills-header">
+        <span class="section-tag en-text">// TECHNICAL_SKILLS</span>
+        <span class="section-tag ar-text">// المهارات_التقنية</span>
+        <h2 class="section-title reveal">
+            <span class="en-text">My <span class="accent-word">Skillset</span></span>
+            <span class="ar-text">مهاراتي <span class="accent-word">التقنية</span></span>
+        </h2>
+    </div>
+
+    <div class="skills-grid">
+
+        <div class="skill-card reveal" onclick="toggleSkillCard(this)">
+            <div class="skill-head">
+                <div class="skill-name-row">
+                    <div class="skill-icon"><i class="fas fa-network-wired"></i></div>
+                    <span class="en-text">Network Security</span><span class="ar-text">أمن الشبكات</span>
+                </div>
+                <span class="skill-pct">95%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" data-width="95"></div></div>
+            <button class="skill-toggle">
+                <span class="en-text">View Tools</span>
+                <span class="ar-text">عرض الأدوات</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="skill-expand">
+                <p class="skill-desc en-text">Designing secure network topologies, configuring firewalls, and conducting deep traffic analysis to detect and mitigate malicious activities in real-time.</p>
+                <p class="skill-desc ar-text">تصميم بنيات شبكية آمنة، إعداد الجدران النارية، وتحليل حركة المرور للكشف عن الأنشطة الضارة في الوقت الفعلي.</p>
+                <div class="tool-chips">
+                    <span class="chip">Wireshark</span>
+                    <span class="chip">Cisco Packet Tracer</span>
+                    <span class="chip">pfSense</span>
+                    <span class="chip">Snort IDS</span>
+                </div>
             </div>
         </div>
 
-        <form action="https://formspree.io/f/xojzvvow" method="POST" class="contact-form">
-            <input type="text" name="name" id="form-name" placeholder="Your Name" class="input-box" required>
-            <input type="email" name="email" id="form-email" placeholder="Your Email" class="input-box" required>
-            <textarea name="message" id="form-message" placeholder="Your Message" class="input-box" required></textarea>
-            <textarea style="display:none" name="_replyto"></textarea>
-            <button type="submit" class="cv-btn" style="width: 100%; margin-bottom: 0;">
-                <span class="en-text">Send Message</span>
-                <span class="ar-text">إرسال الرسالة</span>
+        <div class="skill-card reveal reveal-delay-1" onclick="toggleSkillCard(this)">
+            <div class="skill-head">
+                <div class="skill-name-row">
+                    <div class="skill-icon"><i class="fas fa-user-secret"></i></div>
+                    <span class="en-text">Ethical Hacking</span><span class="ar-text">الاختراق الأخلاقي</span>
+                </div>
+                <span class="skill-pct">80%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
+            <button class="skill-toggle">
+                <span class="en-text">View Tools</span>
+                <span class="ar-text">عرض الأدوات</span>
+                <i class="fas fa-chevron-down"></i>
             </button>
-        </form>
-    </section>
+            <div class="skill-expand">
+                <p class="skill-desc en-text">Proficient in offensive security methodologies, executing full penetration testing simulations, and discovering exploits in standalone systems and networks.</p>
+                <p class="skill-desc ar-text">إجراء اختبارات اختراق شاملة، والكشف عن الثغرات واستغلالها بشكل أخلاقي في الأنظمة والشبكات.</p>
+                <div class="tool-chips">
+                    <span class="chip">Nmap</span>
+                    <span class="chip">Metasploit</span>
+                    <span class="chip">Burp Suite</span>
+                    <span class="chip">Hydra</span>
+                </div>
+            </div>
+        </div>
 
-    <footer class="footer">
-        <p class="en-text">&copy; 2026 <span>Mohsen Alsharafi</span>. All rights reserved.</p>
-        <p class="ar-text">&copy; 2026 <span>محسن الشرفي</span>. جميع الحقوق محفوظة.</p>
-    </footer>
+        <div class="skill-card reveal reveal-delay-2" onclick="toggleSkillCard(this)">
+            <div class="skill-head">
+                <div class="skill-name-row">
+                    <div class="skill-icon"><i class="fab fa-linux"></i></div>
+                    <span class="en-text">Linux & Bash</span><span class="ar-text">لينكس وباش</span>
+                </div>
+                <span class="skill-pct">90%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
+            <button class="skill-toggle">
+                <span class="en-text">View Tools</span>
+                <span class="ar-text">عرض الأدوات</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="skill-expand">
+                <p class="skill-desc en-text">Solid Linux server administration, user access control auditing, and automation scripting using Bash to streamline security workflows.</p>
+                <p class="skill-desc ar-text">إدارة سيرفرات لينكس، ومراجعة صلاحيات المستخدمين، وكتابة سكربتات أتمتة متقدمة لتسريع العمليات الأمنية.</p>
+                <div class="tool-chips">
+                    <span class="chip">Kali Linux</span>
+                    <span class="chip">Ubuntu Server</span>
+                    <span class="chip">Bash Scripts</span>
+                    <span class="chip">Cron Jobs</span>
+                </div>
+            </div>
+        </div>
 
-    <script>
-        const textEn = "Initializing secure connection... Access Granted.";
-        const textAr = "جاري تهيئة الاتصال الآمن... تم منح الصلاحية.";
-        let i = 0;
-        let isTyping = false;
-        let typingTimeout;
+        <div class="skill-card reveal reveal-delay-3" onclick="toggleSkillCard(this)">
+            <div class="skill-head">
+                <div class="skill-name-row">
+                    <div class="skill-icon"><i class="fab fa-python"></i></div>
+                    <span class="en-text">Python for Security</span><span class="ar-text">بايثون للحماية</span>
+                </div>
+                <span class="skill-pct">85%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+            <button class="skill-toggle">
+                <span class="en-text">View Tools</span>
+                <span class="ar-text">عرض الأدوات</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="skill-expand">
+                <p class="skill-desc en-text">Developing custom security tools, network scanners, log parsers, and incident response automation scripts for rapid threat containment.</p>
+                <p class="skill-desc ar-text">تطوير أدوات أمنية مخصصة وماسحات شبكية ومحللات السجلات وأدوات الاستجابة السريعة للحوادث الأمنية.</p>
+                <div class="tool-chips">
+                    <span class="chip">Python 3</span>
+                    <span class="chip">Scapy</span>
+                    <span class="chip">Socket Prog.</span>
+                    <span class="chip">Paramiko</span>
+                </div>
+            </div>
+        </div>
 
-        function typeWriter(text) {
-            if (i < text.length) {
-                document.getElementById("typewriter").innerHTML += text.charAt(i);
-                i++;
-                typingTimeout = setTimeout(() => typeWriter(text), 50);
-            } else {
-                isTyping = false;
+        <div class="skill-card reveal reveal-delay-4" onclick="toggleSkillCard(this)">
+            <div class="skill-head">
+                <div class="skill-name-row">
+                    <div class="skill-icon"><i class="fas fa-bug"></i></div>
+                    <span class="en-text">Vuln. Assessment</span><span class="ar-text">تقييم الثغرات</span>
+                </div>
+                <span class="skill-pct">75%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" data-width="75"></div></div>
+            <button class="skill-toggle">
+                <span class="en-text">View Tools</span>
+                <span class="ar-text">عرض الأدوات</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="skill-expand">
+                <p class="skill-desc en-text">Automated scanning to discover infrastructure vulnerabilities, generating technical reports, and mapping risk priorities for remediation.</p>
+                <p class="skill-desc ar-text">فحص البنية التحتية لاكتشاف الثغرات، صياغة التقارير الفنية، وترتيب أولويات المخاطر للبدء بترقيعها.</p>
+                <div class="tool-chips">
+                    <span class="chip">Nessus</span>
+                    <span class="chip">OpenVAS</span>
+                    <span class="chip">Qualys</span>
+                    <span class="chip">Risk Mgmt.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="skill-card reveal reveal-delay-5" onclick="toggleSkillCard(this)">
+            <div class="skill-head">
+                <div class="skill-name-row">
+                    <div class="skill-icon"><i class="fas fa-globe"></i></div>
+                    <span class="en-text">Web App Security</span><span class="ar-text">أمن تطبيقات الويب</span>
+                </div>
+                <span class="skill-pct">80%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
+            <button class="skill-toggle">
+                <span class="en-text">View Tools</span>
+                <span class="ar-text">عرض الأدوات</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="skill-expand">
+                <p class="skill-desc en-text">Testing web applications against OWASP Top 10, auditing SQL injections, XSS, and securing session objects and authentication flows.</p>
+                <p class="skill-desc ar-text">فحص تطبيقات الويب ضد OWASP Top 10، حماية المدخلات من حقن SQL وXSS، وتأمين جلسات المستخدمين.</p>
+                <div class="tool-chips">
+                    <span class="chip">OWASP Top 10</span>
+                    <span class="chip">SQLMap</span>
+                    <span class="chip">DVWA</span>
+                    <span class="chip">Nikto</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ============================================================
+     PROJECTS SECTION
+============================================================ -->
+<section class="projects-section" id="projects">
+    <div class="projects-header">
+        <span class="section-tag en-text">// PROJECTS</span>
+        <span class="section-tag ar-text">// المشاريع</span>
+        <h2 class="section-title reveal">
+            <span class="en-text">My <span class="accent-word">Projects</span></span>
+            <span class="ar-text">أبرز <span class="accent-word">مشاريعي</span></span>
+        </h2>
+        <p style="color:var(--muted); font-size:15px; max-width:500px; margin:0 auto;" class="reveal reveal-delay-1 en-text">
+            A selection of cybersecurity tools, scripts, and lab environments I've built while learning.
+        </p>
+        <p style="color:var(--muted); font-size:15px; max-width:500px; margin:0 auto;" class="reveal reveal-delay-1 ar-text">
+            مجموعة من الأدوات الأمنية، السكربتات، وبيئات المختبر التي بنيتها خلال رحلتي التعليمية.
+        </p>
+    </div>
+
+    <div class="projects-grid">
+
+        <div class="project-card reveal">
+            <div class="project-top">
+                <div class="project-icon-wrap" style="background:rgba(0,229,255,0.1);">
+                    <i class="fas fa-network-wired" style="color:var(--accent);"></i>
+                </div>
+                <div class="project-links">
+                    <a href="https://github.com/ov6ho" target="_blank" class="project-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+                </div>
+            </div>
+            <div>
+                <div class="project-name en-text">Network Packet Analyzer</div>
+                <div class="project-name ar-text">محلل حزم الشبكة</div>
+            </div>
+            <p class="project-desc en-text">A Python-based packet sniffer that captures and analyzes live network traffic, identifies suspicious patterns, and logs potential threats in real-time.</p>
+            <p class="project-desc ar-text">أداة بايثون لالتقاط وتحليل حركة مرور الشبكة الحية، تكتشف الأنماط المشبوهة وتسجل التهديدات المحتملة في الوقت الفعلي.</p>
+            <div class="project-stack">
+                <span class="stack-tag">Python</span>
+                <span class="stack-tag">Scapy</span>
+                <span class="stack-tag">Socket</span>
+                <span class="stack-tag">pcap</span>
+            </div>
+            <div class="project-status" style="color:var(--green);">
+                <span class="status-dot green"></span>
+                <span class="en-text">Active</span><span class="ar-text">نشط</span>
+            </div>
+        </div>
+
+        <div class="project-card reveal reveal-delay-1">
+            <div class="project-top">
+                <div class="project-icon-wrap" style="background:rgba(99,102,241,0.1);">
+                    <i class="fas fa-lock" style="color:var(--primary);"></i>
+                </div>
+                <div class="project-links">
+                    <a href="https://github.com/ov6ho" target="_blank" class="project-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+                </div>
+            </div>
+            <div>
+                <div class="project-name en-text">Password Strength Auditor</div>
+                <div class="project-name ar-text">مدقق قوة كلمات المرور</div>
+            </div>
+            <p class="project-desc en-text">A CLI tool that audits password strength against common attack vectors including dictionary attacks, brute force entropy analysis, and HIBP breach checks.</p>
+            <p class="project-desc ar-text">أداة سطر أوامر لمراجعة قوة كلمات المرور وكشف الأنماط الضعيفة عبر تحليل Entropy وقواميس الاختراق.</p>
+            <div class="project-stack">
+                <span class="stack-tag">Python</span>
+                <span class="stack-tag">HashLib</span>
+                <span class="stack-tag">API</span>
+                <span class="stack-tag">RegEx</span>
+            </div>
+            <div class="project-status" style="color:var(--green);">
+                <span class="status-dot green"></span>
+                <span class="en-text">Active</span><span class="ar-text">نشط</span>
+            </div>
+        </div>
+
+        <div class="project-card reveal reveal-delay-2">
+            <div class="project-top">
+                <div class="project-icon-wrap" style="background:rgba(34,197,94,0.1);">
+                    <i class="fas fa-terminal" style="color:var(--green);"></i>
+                </div>
+                <div class="project-links">
+                    <a href="https://github.com/ov6ho" target="_blank" class="project-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+                </div>
+            </div>
+            <div>
+                <div class="project-name en-text">Bash Recon Toolkit</div>
+                <div class="project-name ar-text">مجموعة أدوات الاستطلاع</div>
+            </div>
+            <p class="project-desc en-text">An automated reconnaissance script that performs subdomain enumeration, port scanning, service fingerprinting, and whois lookups for a target domain.</p>
+            <p class="project-desc ar-text">سكربت استطلاع مؤتمت يجمع معلومات النطاق المستهدف، ويفحص المنافذ ويحدد الخدمات والبنية التحتية.</p>
+            <div class="project-stack">
+                <span class="stack-tag">Bash</span>
+                <span class="stack-tag">nmap</span>
+                <span class="stack-tag">whois</span>
+                <span class="stack-tag">dig</span>
+            </div>
+            <div class="project-status" style="color:#f59e0b;">
+                <span class="status-dot yellow"></span>
+                <span class="en-text">In Progress</span><span class="ar-text">قيد الإنجاز</span>
+            </div>
+        </div>
+
+        <div class="project-card reveal reveal-delay-3">
+            <div class="project-top">
+                <div class="project-icon-wrap" style="background:rgba(168,85,247,0.1);">
+                    <i class="fas fa-globe" style="color:var(--accent2);"></i>
+                </div>
+                <div class="project-links">
+                    <a href="https://github.com/ov6ho" target="_blank" class="project-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+                </div>
+            </div>
+            <div>
+                <div class="project-name en-text">Web Vuln Lab (DVWA)</div>
+                <div class="project-name ar-text">مختبر ثغرات الويب</div>
+            </div>
+            <p class="project-desc en-text">A configured DVWA environment with custom exploit scripts testing SQL Injection, XSS, CSRF, File Upload bypass, and Command Injection vulnerabilities.</p>
+            <p class="project-desc ar-text">بيئة DVWA مهيأة مع سكربتات مخصصة لاختبار SQLi و XSS و CSRF وثغرات رفع الملفات وحقن الأوامر.</p>
+            <div class="project-stack">
+                <span class="stack-tag">PHP</span>
+                <span class="stack-tag">MySQL</span>
+                <span class="stack-tag">DVWA</span>
+                <span class="stack-tag">Burp Suite</span>
+            </div>
+            <div class="project-status" style="color:var(--green);">
+                <span class="status-dot green"></span>
+                <span class="en-text">Active</span><span class="ar-text">نشط</span>
+            </div>
+        </div>
+
+        <div class="project-card reveal reveal-delay-4">
+            <div class="project-top">
+                <div class="project-icon-wrap" style="background:rgba(239,68,68,0.1);">
+                    <i class="fas fa-shield-virus" style="color:#ef4444;"></i>
+                </div>
+                <div class="project-links">
+                    <a href="https://github.com/ov6ho" target="_blank" class="project-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+                </div>
+            </div>
+            <div>
+                <div class="project-name en-text">Firewall Rule Analyzer</div>
+                <div class="project-name ar-text">محلل قواعد الجدار الناري</div>
+            </div>
+            <p class="project-desc en-text">A Python utility that parses firewall rulesets, identifies redundant or overly permissive rules, and generates a prioritized hardening report.</p>
+            <p class="project-desc ar-text">أداة بايثون لتحليل قواعد الجدار الناري وكشف القواعد الزائدة أو المتساهلة وتوليد تقرير لتعزيز الحماية.</p>
+            <div class="project-stack">
+                <span class="stack-tag">Python</span>
+                <span class="stack-tag">iptables</span>
+                <span class="stack-tag">pfSense</span>
+                <span class="stack-tag">JSON</span>
+            </div>
+            <div class="project-status" style="color:#f59e0b;">
+                <span class="status-dot yellow"></span>
+                <span class="en-text">In Progress</span><span class="ar-text">قيد الإنجاز</span>
+            </div>
+        </div>
+
+        <div class="project-card reveal reveal-delay-5">
+            <div class="project-top">
+                <div class="project-icon-wrap" style="background:rgba(251,191,36,0.1);">
+                    <i class="fas fa-key" style="color:#fbbf24;"></i>
+                </div>
+                <div class="project-links">
+                    <a href="https://github.com/ov6ho" target="_blank" class="project-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+                </div>
+            </div>
+            <div>
+                <div class="project-name en-text">CTF Writeups Collection</div>
+                <div class="project-name ar-text">مجموعة حلول CTF</div>
+            </div>
+            <p class="project-desc en-text">Documented writeups and solutions for various Capture The Flag challenges covering cryptography, steganography, reverse engineering, and web exploitation.</p>
+            <p class="project-desc ar-text">توثيق شامل لحلول تحديات CTF تغطي التشفير، إخفاء المعلومات، الهندسة العكسية، واستغلال الويب.</p>
+            <div class="project-stack">
+                <span class="stack-tag">Crypto</span>
+                <span class="stack-tag">Rev. Eng.</span>
+                <span class="stack-tag">Stego</span>
+                <span class="stack-tag">Web Exploit</span>
+            </div>
+            <div class="project-status" style="color:var(--green);">
+                <span class="status-dot green"></span>
+                <span class="en-text">Ongoing</span><span class="ar-text">مستمر</span>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ============================================================
+     CTF CHALLENGE SECTION
+============================================================ -->
+<section class="challenge-section" id="challenge">
+    <div class="challenge-header">
+        <span class="section-tag en-text">// CTF_CHALLENGE</span>
+        <span class="section-tag ar-text">// تحدي_السيبراني</span>
+        <h2 class="section-title reveal">
+            <span class="en-text">Crack <span class="accent-word">The Code</span></span>
+            <span class="ar-text">تحدي <span class="accent-word">التشفير</span></span>
+        </h2>
+    </div>
+
+    <div class="challenge-wrapper reveal reveal-delay-1">
+        <div class="challenge-topbar">
+            <i class="fas fa-terminal ctf-icon"></i>
+            <span>ctf_challenge.sh</span>
+            <span class="ctf-badge">CTF</span>
+            <span style="margin-left:auto;" class="en-text">Level: Beginner</span>
+            <span style="margin-left:auto;" class="ar-text">المستوى: مبتدئ</span>
+        </div>
+        <div class="challenge-body">
+            <p class="challenge-desc en-text">
+                <span style="color:var(--green);">$</span> Decrypt the following Base64 encoded token to reveal the access key and prove your skills:
+            </p>
+            <p class="challenge-desc ar-text">
+                <span style="color:var(--green);">$</span> قم بفك تشفير الـ Token التالي المكتوب بـ Base64 لاستخراج مفتاح الدخول:
+            </p>
+
+            <div class="cipher-display" style="position:relative;">
+                TW9oc2VuX0N5YmVyU2VjXzIwMjY=
+                <div class="cipher-scanline"></div>
+            </div>
+
+            <input
+                type="text"
+                id="challenge-input"
+                class="challenge-input"
+                placeholder="Enter decrypted key here..."
+                onkeydown="if(event.key==='Enter') checkChallenge()"
+            />
+
+            <div class="challenge-actions">
+                <button class="ctf-verify-btn" onclick="checkChallenge()">
+                    <span class="en-text">▶ Verify Access Key</span>
+                    <span class="ar-text">▶ التحقق من المفتاح</span>
+                </button>
+                <button class="ctf-hint-btn" onclick="showHint()">
+                    <span class="en-text">💡 Hint</span>
+                    <span class="ar-text">💡 تلميح</span>
+                </button>
+            </div>
+
+            <div class="hint-box" id="hint-box">
+                <span class="en-text">🔍 Hint: Base64 is an encoding scheme used to encode binary data. Try using <code>atob()</code> in your browser console, or any online Base64 decoder.</span>
+                <span class="ar-text">🔍 تلميح: Base64 طريقة ترميز للبيانات الثنائية. جرب استخدام <code>atob()</code> في console المتصفح أو أي موقع لفك التشفير.</span>
+            </div>
+
+            <div id="challenge-result" class="challenge-result"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     CONTACT SECTION
+============================================================ -->
+<section class="contact-section" id="contact">
+    <div class="contact-left">
+        <span class="section-tag en-text">// GET_IN_TOUCH</span>
+        <span class="section-tag ar-text">// تواصل_معي</span>
+        <h2 class="section-title reveal">
+            <span class="en-text">Let's <span class="accent-word">Connect</span></span>
+            <span class="ar-text">دعنا <span class="accent-word">نتواصل</span></span>
+        </h2>
+        <p class="contact-intro reveal reveal-delay-1 en-text">
+            I'm currently open for new opportunities, collaborations, or even a friendly chat about cybersecurity and tech. Feel free to drop a message!
+        </p>
+        <p class="contact-intro reveal reveal-delay-1 ar-text">
+            أنا متاح للفرص الجديدة أو التعاون المشترك أو حتى لإجراء محادثة ودية حول الأمن السيبراني. لا تتردد في إرسال رسالة!
+        </p>
+
+        <div class="contact-items">
+            <div class="contact-item reveal reveal-delay-2">
+                <div class="contact-item-icon"><i class="fas fa-envelope"></i></div>
+                <div class="contact-item-text">
+                    <div class="label en-text">EMAIL</div>
+                    <div class="label ar-text">البريد الإلكتروني</div>
+                    <div class="value" dir="ltr">mohsen110099@gmail.com</div>
+                </div>
+            </div>
+            <div class="contact-item reveal reveal-delay-3">
+                <div class="contact-item-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="contact-item-text">
+                    <div class="label en-text">LOCATION</div>
+                    <div class="label ar-text">الموقع</div>
+                    <div class="value en-text">APU, Kuala Lumpur, Malaysia</div>
+                    <div class="value ar-text">جامعة APU، كوالالمبور، ماليزيا</div>
+                </div>
+            </div>
+            <div class="contact-item reveal reveal-delay-4">
+                <div class="contact-item-icon"><i class="fab fa-whatsapp"></i></div>
+                <div class="contact-item-text">
+                    <div class="label">WHATSAPP</div>
+                    <div class="value" dir="ltr">+60 11-6202 0336</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-right reveal reveal-delay-2">
+        <div class="contact-form-wrap">
+            <form action="https://formspree.io/f/xojzvvow" method="POST">
+                <div class="form-group">
+                    <label class="form-label en-text">YOUR NAME</label>
+                    <label class="form-label ar-text">الاسم</label>
+                    <input type="text" name="name" class="form-control" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label en-text">EMAIL ADDRESS</label>
+                    <label class="form-label ar-text">البريد الإلكتروني</label>
+                    <input type="email" name="email" class="form-control" placeholder="you@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label en-text">MESSAGE</label>
+                    <label class="form-label ar-text">الرسالة</label>
+                    <textarea name="message" class="form-control" placeholder="Your message here..." required></textarea>
+                </div>
+                <button type="submit" class="send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                    <span class="en-text">Send Message</span>
+                    <span class="ar-text">إرسال الرسالة</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-copy">
+        <span class="en-text">&copy; 2026 <span>Mohsen Alsharafi</span>. All rights reserved.</span>
+        <span class="ar-text">&copy; 2026 <span>محسن الشرفي</span>. جميع الحقوق محفوظة.</span>
+    </div>
+    <div class="footer-right en-text">CYBERSEC // APU MALAYSIA // 2026</div>
+    <div class="footer-right ar-text">أمن سيبراني // APU ماليزيا // 2026</div>
+</footer>
+
+<!-- Audio Player -->
+<div class="audio-player" id="audio-player">
+    <button class="audio-btn" id="audio-btn" onclick="toggleAudio()" title="Cyber Ambient">
+        <i class="fas fa-volume-mute" id="audio-icon"></i>
+    </button>
+    <div class="audio-label" id="audio-label">
+        <span class="en-text">AMBIENT // <span style="color:var(--accent);">OFF</span></span>
+        <span class="ar-text">موسيقى // <span style="color:var(--accent);">مغلقة</span></span>
+    </div>
+    <audio id="cyber-audio" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"></audio>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script>
+/* ============================================================
+   BOOT SCREEN
+============================================================ */
+const bootMessages = [
+    { text: '[  OK  ] Initializing kernel modules...', cls: 'ok' },
+    { text: '[  OK  ] Loading network interfaces...', cls: 'ok' },
+    { text: '[ INFO ] Checking firewall rules...', cls: 'info' },
+    { text: '[  OK  ] Firewall active — all ports secured.', cls: 'ok' },
+    { text: '[ INFO ] Running vulnerability scan...', cls: 'info' },
+    { text: '[  OK  ] No critical vulnerabilities found.', cls: 'ok' },
+    { text: '[ WARN ] Intrusion attempt detected from 192.168.x.x', cls: 'warn' },
+    { text: '[  OK  ] Threat neutralized. IP blocked.', cls: 'ok' },
+    { text: '[ INFO ] Mounting encrypted volume...', cls: 'info' },
+    { text: '[  OK  ] Portfolio filesystem mounted.', cls: 'ok' },
+    { text: '[ INFO ] Launching secure environment...', cls: 'info' },
+    { text: '[  OK  ] Welcome, Analyst. Access Granted.', cls: 'ok' },
+];
+
+function runBoot() {
+    const container = document.getElementById('boot-lines');
+    const bar = document.getElementById('boot-bar');
+    const pct = document.getElementById('boot-percent');
+    let i = 0;
+    const interval = setInterval(() => {
+        if (i >= bootMessages.length) {
+            clearInterval(interval);
+            setTimeout(() => {
+                document.getElementById('boot-screen').classList.add('hidden');
+            }, 400);
+            return;
+        }
+        const msg = bootMessages[i];
+        const el = document.createElement('div');
+        el.className = 'boot-line ' + msg.cls;
+        el.textContent = msg.text;
+        el.style.animationDelay = '0s';
+        container.appendChild(el);
+        container.scrollTop = container.scrollHeight;
+        const progress = Math.round(((i + 1) / bootMessages.length) * 100);
+        bar.style.width = progress + '%';
+        pct.textContent = progress + '%';
+        i++;
+    }, 120);
+}
+runBoot();
+
+/* ============================================================
+   CUSTOM CURSOR
+============================================================ */
+const cursorOuter = document.getElementById('cursor-outer');
+const cursorDot = document.getElementById('cursor-dot');
+let mouseX = 0, mouseY = 0;
+let outerX = 0, outerY = 0;
+
+document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursorDot.style.left = mouseX + 'px';
+    cursorDot.style.top = mouseY + 'px';
+});
+
+function animateCursor() {
+    outerX += (mouseX - outerX) * 0.15;
+    outerY += (mouseY - outerY) * 0.15;
+    cursorOuter.style.left = outerX + 'px';
+    cursorOuter.style.top = outerY + 'px';
+    requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+document.querySelectorAll('a, button, .skill-card, .project-card, .progress-dot').forEach(el => {
+    el.addEventListener('mouseenter', () => cursorOuter.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursorOuter.classList.remove('hovering'));
+});
+
+/* ============================================================
+   MATRIX RAIN
+============================================================ */
+const canvas = document.getElementById('matrix-canvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const chars = '01アイウエオカキクケコ0101ABCDEF01';
+const fontSize = 13;
+let columns, drops;
+
+function initMatrix() {
+    columns = Math.floor(canvas.width / fontSize);
+    drops = Array(columns).fill(1);
+}
+initMatrix();
+
+function drawMatrix() {
+    ctx.fillStyle = 'rgba(8, 8, 16, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#00e5ff';
+    ctx.font = fontSize + 'px JetBrains Mono, monospace';
+    for (let i = 0; i < drops.length; i++) {
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+    }
+}
+setInterval(drawMatrix, 50);
+window.addEventListener('resize', initMatrix);
+
+/* ============================================================
+   NAVBAR SCROLL
+============================================================ */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 60) navbar.classList.add('scrolled');
+    else navbar.classList.remove('scrolled');
+    updateProgressDots();
+});
+
+/* ============================================================
+   SECTION PROGRESS DOTS
+============================================================ */
+function updateProgressDots() {
+    const sections = ['hero', 'stats', 'about', 'skills', 'projects', 'challenge', 'contact'];
+    const dots = document.querySelectorAll('.progress-dot');
+    let activeIdx = 0;
+    sections.forEach((id, i) => {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.5) activeIdx = i;
+    });
+    dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === activeIdx);
+    });
+}
+
+function scrollToSection(id) {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ============================================================
+   REVEAL ON SCROLL
+============================================================ */
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            // Animate skill bars
+            if (entry.target.classList.contains('skills-section')) {
+                animateSkillBars();
+            }
+            // Animate stat counters
+            const counter = entry.target.querySelector('[data-target]');
+            if (counter && !counter.dataset.animated) {
+                animateCounter(counter);
+                counter.dataset.animated = '1';
             }
         }
+    });
+}, { threshold: 0.1 });
 
-        function startTyping() {
-            if (document.body.classList.contains('normal-mode')) return;
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+document.querySelectorAll('.stat-item').forEach(el => observer.observe(el));
+observer.observe(document.getElementById('skills'));
 
-            clearTimeout(typingTimeout);
-            isTyping = true;
-            document.getElementById("typewriter").innerHTML = "";
-            i = 0;
-            const isAr = document.body.classList.contains('ar');
-            typeWriter(isAr ? textAr : textEn);
+/* ============================================================
+   SKILL BAR ANIMATIONS
+============================================================ */
+let skillsAnimated = false;
+function animateSkillBars() {
+    if (skillsAnimated) return;
+    skillsAnimated = true;
+    document.querySelectorAll('.skill-fill').forEach(fill => {
+        const target = fill.dataset.width;
+        setTimeout(() => { fill.style.width = target + '%'; }, 200);
+    });
+}
+
+// Also trigger when skills section is visible
+const skillsSection = document.getElementById('skills');
+const skillsObserver = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) animateSkillBars();
+}, { threshold: 0.2 });
+skillsObserver.observe(skillsSection);
+
+/* ============================================================
+   STAT COUNTERS
+============================================================ */
+function animateCounter(el) {
+    const target = parseInt(el.dataset.target);
+    const duration = 1800;
+    const start = performance.now();
+    function step(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(eased * target);
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = target;
+    }
+    requestAnimationFrame(step);
+}
+
+/* ============================================================
+   TILT CARD 3D EFFECT
+============================================================ */
+const tiltCard = document.getElementById('tilt-card');
+if (tiltCard) {
+    tiltCard.addEventListener('mousemove', (e) => {
+        const rect = tiltCard.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const cx = rect.width / 2;
+        const cy = rect.height / 2;
+        const rotX = ((y - cy) / cy) * -12;
+        const rotY = ((x - cx) / cx) * 12;
+        tiltCard.style.transform = `perspective(600px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.03)`;
+        tiltCard.style.boxShadow = `${-rotY * 2}px ${rotX * 2}px 40px rgba(0,229,255,0.2)`;
+    });
+    tiltCard.addEventListener('mouseleave', () => {
+        tiltCard.style.transform = '';
+        tiltCard.style.boxShadow = '';
+    });
+}
+
+/* ============================================================
+   TYPEWRITER EFFECT
+============================================================ */
+const phrasesEn = [
+    'Initializing secure connection...',
+    'cat /etc/passwd | grep "mohsen"',
+    'nmap -sV -p 80,443 target.io',
+    'python3 exploit.py --target pwned',
+    'sudo wireshark -i eth0 &',
+];
+const phrasesAr = [
+    'جاري تهيئة الاتصال الآمن...',
+    'فحص الثغرات الأمنية...',
+    'تحليل حركة مرور الشبكة...',
+    'اختراق أخلاقي ✓',
+];
+const rolesEn = ['Cybersecurity Student', 'Ethical Hacker', 'Network Analyst', 'Python Developer', 'Linux Enthusiast'];
+const rolesAr = ['طالب أمن سيبراني', 'مخترق أخلاقي', 'محلل شبكات', 'مطور بايثون'];
+
+let typeIdx = 0, typeCharIdx = 0, typeDeleting = false;
+let roleIdx = 0, roleCharIdx = 0, roleDeleting = false;
+
+function typeWriter() {
+    const isAr = document.body.classList.contains('ar');
+    const phrases = isAr ? phrasesAr : phrasesEn;
+    const el = document.getElementById('typewriter');
+    if (!el) return;
+    const current = phrases[typeIdx % phrases.length];
+    if (typeDeleting) {
+        el.textContent = current.substring(0, typeCharIdx--);
+        if (typeCharIdx < 0) { typeDeleting = false; typeIdx++; setTimeout(typeWriter, 500); return; }
+        setTimeout(typeWriter, 30);
+    } else {
+        el.textContent = current.substring(0, typeCharIdx++);
+        if (typeCharIdx > current.length) {
+            typeDeleting = true;
+            setTimeout(typeWriter, 2200);
+            return;
         }
+        setTimeout(typeWriter, 55);
+    }
+}
 
-        window.onload = startTyping;
+function roleTyper() {
+    const isAr = document.body.classList.contains('ar');
+    const roles = isAr ? rolesAr : rolesEn;
+    const el = document.getElementById(isAr ? 'typed-role-ar' : 'typed-role');
+    if (!el) return;
+    const current = roles[roleIdx % roles.length];
+    if (roleDeleting) {
+        el.textContent = current.substring(0, roleCharIdx--);
+        if (roleCharIdx < 0) { roleDeleting = false; roleIdx++; setTimeout(roleTyper, 400); return; }
+        setTimeout(roleTyper, 50);
+    } else {
+        el.textContent = current.substring(0, roleCharIdx++);
+        if (roleCharIdx > current.length) { roleDeleting = true; setTimeout(roleTyper, 2000); return; }
+        setTimeout(roleTyper, 80);
+    }
+}
 
-        function toggleSkill(box) {
-            const activeBoxes = document.querySelectorAll('.skill-box.active');
-            activeBoxes.forEach(activeBox => { 
-                if(activeBox !== box) activeBox.classList.remove('active'); 
-            });
+typeWriter();
+roleTyper();
 
-            box.classList.toggle('active');
-        }
+/* ============================================================
+   SKILL CARD TOGGLE
+============================================================ */
+function toggleSkillCard(card) {
+    const isActive = card.classList.contains('active');
+    document.querySelectorAll('.skill-card.active').forEach(c => c.classList.remove('active'));
+    if (!isActive) card.classList.add('active');
+}
 
-        const audio = document.getElementById('cyber-audio');
-        const audioContainer = document.getElementById('cyber-audio-container');
-        const audioIcon = document.getElementById('audio-icon');
-        const statusText = document.querySelector('.audio-status-text');
+/* ============================================================
+   CTF CHALLENGE
+============================================================ */
+function checkChallenge() {
+    const input = document.getElementById('challenge-input').value.trim();
+    const resultEl = document.getElementById('challenge-result');
+    const isAr = document.body.classList.contains('ar');
+    const correctKey = 'Mohsen_CyberSec_2026';
 
-        function toggleAudio() {
-            if (audio.paused) {
-                audio.play().then(() => {
-                    audioContainer.classList.add('playing');
-                    audioIcon.className = "fas fa-volume-up";
-                    updateStatusText(true);
-                }).catch(err => console.log("Audio delayed."));
-            } else {
-                audio.pause();
-                audioContainer.classList.remove('playing');
-                audioIcon.className = "fas fa-volume-mute";
-                updateStatusText(false);
-            }
-        }
+    resultEl.className = 'challenge-result';
+    if (input === correctKey) {
+        resultEl.classList.add('success');
+        resultEl.innerHTML = isAr
+            ? '✅ [+] تم منح الصلاحية — مرحباً بك في النظام أيها المحلل! 🎉'
+            : '✅ [+] ACCESS GRANTED — Welcome to the Core, Analyst! 🎉';
+        // Confetti burst
+        launchConfetti();
+    } else if (!input) {
+        resultEl.classList.add('fail');
+        resultEl.textContent = isAr ? '⚠ يرجى إدخال مفتاح التشفير.' : '⚠ Please enter a key.';
+    } else {
+        resultEl.classList.add('fail');
+        resultEl.innerHTML = isAr
+            ? '❌ [-] الصلاحية مرفوضة — رمز التحقق غير صحيح.'
+            : '❌ [-] ACCESS DENIED — Invalid Key Cryptogram.';
+    }
+}
 
-        function updateStatusText(isPlaying) {
-            const isAr = document.body.classList.contains('ar');
-            if (isPlaying) {
-                statusText.innerHTML = isAr ? 'النظام: <span>الموسيقى_تعمل</span>' : 'SYSTEM: <span>AMBIENT_ON</span>';
-            } else {
-                statusText.innerHTML = isAr ? 'النظام: <span>الموسيقى_مغلقة</span>' : 'SYSTEM: <span>AMBIENT_OFF</span>';
-            }
-        }
+function showHint() {
+    const hint = document.getElementById('hint-box');
+    hint.classList.toggle('visible');
+}
 
-        function toggleMode() {
-            const body = document.body;
-            const btn = document.getElementById('mode-toggle-btn');
-            const isAr = body.classList.contains('ar');
+function launchConfetti() {
+    const colors = ['#6366f1', '#00e5ff', '#22c55e', '#a855f7', '#f59e0b'];
+    for (let i = 0; i < 60; i++) {
+        const el = document.createElement('div');
+        el.style.cssText = `
+            position:fixed; z-index:99999; pointer-events:none;
+            width:${Math.random()*8+4}px; height:${Math.random()*8+4}px;
+            background:${colors[Math.floor(Math.random()*colors.length)]};
+            left:${Math.random()*100}vw; top:-10px;
+            border-radius:${Math.random() > 0.5 ? '50%' : '0'};
+            opacity:1;
+        `;
+        document.body.appendChild(el);
+        const duration = Math.random() * 2000 + 1000;
+        el.animate([
+            { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
+            { transform: `translateY(100vh) rotate(${Math.random()*720}deg)`, opacity: 0 }
+        ], { duration, easing: 'cubic-bezier(0.25,0.46,0.45,0.94)' }).onfinish = () => el.remove();
+    }
+}
 
-            if (body.classList.contains('hacker-mode')) {
-                body.classList.remove('hacker-mode');
-                body.classList.add('normal-mode');
-                btn.textContent = isAr ? 'وضع الهكر' : 'Hacker Mode';
-                
-                if (!audio.paused) {
-                    audio.pause();
-                    audioContainer.classList.remove('playing');
-                    audioIcon.className = "fas fa-volume-mute";
-                    updateStatusText(false);
-                }
-            } else {
-                body.classList.remove('normal-mode');
-                body.classList.add('hacker-mode');
-                btn.textContent = isAr ? 'الوضع العادي' : 'Normal Mode';
-                startTyping();
-            }
-        }
+/* ============================================================
+   AUDIO
+============================================================ */
+const audio = document.getElementById('cyber-audio');
+const audioPlayer = document.getElementById('audio-player');
+const audioIcon = document.getElementById('audio-icon');
+const audioLabel = document.getElementById('audio-label');
 
-        /* --- [برمجيات التحقق من تحدي التشفير التفاعلي] --- */
-        function checkChallenge() {
-            const input = document.getElementById('challenge-input').value.trim();
-            const resultDiv = document.getElementById('challenge-result');
-            const isAr = document.body.classList.contains('ar');
-            
-            // الكلمة السرية الصحيحة الناتجة عن فك تشفير الـ Token
-            const correctKey = "Mohsen_CyberSec_2026";
+function toggleAudio() {
+    if (audio.paused) {
+        audio.play().then(() => {
+            audioPlayer.classList.add('playing');
+            audioIcon.className = 'fas fa-volume-up';
+        }).catch(() => {});
+    } else {
+        audio.pause();
+        audioPlayer.classList.remove('playing');
+        audioIcon.className = 'fas fa-volume-mute';
+    }
+}
 
-            if (input === correctKey) {
-                resultDiv.style.color = "#22c55e";
-                resultDiv.innerHTML = isAr ? "[+] تم منح الصلاحية: مرحباً بك في النظام أيها المحلل!" : "[+] Access Granted: Welcome to the Core, Analyst!";
-            } else {
-                resultDiv.style.color = "#ff003c";
-                resultDiv.innerHTML = isAr ? "[-] الصلاحية مرفوضة: رمز التحقق غير صحيح." : "[-] Access Denied: Invalid Key Cryptogram.";
-            }
-        }
+/* ============================================================
+   MODE TOGGLE
+============================================================ */
+function toggleMode() {
+    const body = document.body;
+    const isAr = body.classList.contains('ar');
+    const modeBtn = document.getElementById('mode-btn');
+    const modeBtnM = document.getElementById('mode-btn-m');
 
-        function toggleLanguage() {
-            const body = document.body;
-            const btn = document.getElementById('lang-toggle-btn');
-            const modeBtn = document.getElementById('mode-toggle-btn');
-            const nameInput = document.getElementById('form-name');
-            const emailInput = document.getElementById('form-email');
-            const messageInput = document.getElementById('form-message');
-            const challengeInput = document.getElementById('challenge-input');
+    if (body.classList.contains('hacker-mode')) {
+        body.classList.remove('hacker-mode');
+        body.classList.add('normal-mode');
+        const label = isAr ? 'وضع الهاكر' : 'Hacker Mode';
+        if (modeBtn) modeBtn.textContent = label;
+        if (modeBtnM) modeBtnM.textContent = label;
+        if (!audio.paused) { audio.pause(); audioPlayer.classList.remove('playing'); audioIcon.className = 'fas fa-volume-mute'; }
+    } else {
+        body.classList.remove('normal-mode');
+        body.classList.add('hacker-mode');
+        const label = isAr ? 'الوضع العادي' : 'Normal Mode';
+        if (modeBtn) modeBtn.textContent = label;
+        if (modeBtnM) modeBtnM.textContent = label;
+    }
+}
 
-            const isHacker = body.classList.contains('hacker-mode');
+/* ============================================================
+   LANGUAGE TOGGLE
+============================================================ */
+function toggleLanguage() {
+    const body = document.body;
+    const langBtn = document.getElementById('lang-btn');
+    const langBtnM = document.getElementById('lang-btn-m');
+    const modeBtn = document.getElementById('mode-btn');
+    const modeBtnM = document.getElementById('mode-btn-m');
+    const isHacker = body.classList.contains('hacker-mode');
+    const challengeInput = document.getElementById('challenge-input');
 
-            if (body.classList.contains('en')) {
-                body.classList.remove('en');
-                body.classList.add('ar');
-                btn.textContent = 'EN';
-                modeBtn.textContent = isHacker ? 'الوضع العادي' : 'وضع الهكر';
+    if (body.classList.contains('en')) {
+        body.classList.replace('en', 'ar');
+        if (langBtn) langBtn.textContent = 'EN';
+        if (langBtnM) langBtnM.textContent = 'EN';
+        if (modeBtn) modeBtn.textContent = isHacker ? 'الوضع العادي' : 'وضع الهاكر';
+        if (modeBtnM) modeBtnM.textContent = isHacker ? 'الوضع العادي' : 'وضع الهاكر';
+        if (challengeInput) challengeInput.placeholder = 'أدخل مفتاح فك التشفير هنا...';
+    } else {
+        body.classList.replace('ar', 'en');
+        if (langBtn) langBtn.textContent = 'AR';
+        if (langBtnM) langBtnM.textContent = 'AR';
+        if (modeBtn) modeBtn.textContent = isHacker ? 'Normal Mode' : 'Hacker Mode';
+        if (modeBtnM) modeBtnM.textContent = isHacker ? 'Normal Mode' : 'Hacker Mode';
+        if (challengeInput) challengeInput.placeholder = 'Enter decrypted key here...';
+    }
 
-                if (nameInput) nameInput.placeholder = 'اسمك الكريم';
-                if (emailInput) emailInput.placeholder = 'بريدك الإلكتروني';
-                if (messageInput) messageInput.placeholder = 'نص رسالتك هنا...';
-                if (challengeInput) challengeInput.placeholder = 'أدخل مفتاح فك التشفير هنا...';
-            }
-            else {
-                body.classList.remove('ar');
-                body.classList.add('en');
-                btn.textContent = 'AR';
-                modeBtn.textContent = isHacker ? 'Normal Mode' : 'Hacker Mode';
+    document.getElementById('challenge-result').textContent = '';
+    document.getElementById('hint-box').classList.remove('visible');
+    // Restart role typer with new language
+    roleIdx = 0; roleCharIdx = 0; roleDeleting = false;
+    typeIdx = 0; typeCharIdx = 0; typeDeleting = false;
+    const tw = document.getElementById('typewriter');
+    if (tw) tw.textContent = '';
+    setTimeout(() => { typeWriter(); roleTyper(); }, 100);
+}
 
-                if (nameInput) nameInput.placeholder = 'Your Name';
-                if (emailInput) emailInput.placeholder = 'Your Email';
-                if (messageInput) messageInput.placeholder = 'Your Message';
-                if (challengeInput) challengeInput.placeholder = 'Enter decrypted key here...';
-            }
-
-            document.getElementById('challenge-result').innerHTML = "";
-            updateStatusText(!audio.paused);
-            startTyping();
-        }
-    </script>
+/* ============================================================
+   MOBILE MENU
+============================================================ */
+function toggleMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const hamburger = document.getElementById('hamburger');
+    menu.classList.toggle('open');
+    hamburger.classList.toggle('open');
+}
+</script>
 </body>
 </html>
