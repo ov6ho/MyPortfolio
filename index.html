@@ -773,160 +773,141 @@
             .achievement-badge { min-width: auto; }
         }
 
+
         /* ============================================================
            RESPONSIVE — SMALL MOBILE ≤480px  (iPhone SE / 375–430px)
         ============================================================ */
         @media (max-width: 480px) {
             .navbar { padding: 14px 5%; }
 
-            /* HERO: fully stacked, image in normal flow */
+            /* HERO: ترتيب مرن يمنع تداخل العناصر نهائياً */
             .hero-section {
-                flex-direction: column;
-                text-align: center;
-                padding: 100px 5% 0;
-                min-height: auto;
-                gap: 40px;
-                align-items: center;
-                overflow: visible;
+                flex-direction: column !important;
+                text-align: center !important;
+                padding: 100px 5% 40px !important;
+                min-height: auto !important;
+                gap: 35px !important;
+                display: flex !important;
+                align-items: center !important;
             }
             .hero-content {
-                max-width: 100%;
-                width: 100%;
-                order: 1;
-                z-index: 2;
-                position: relative;
-                padding-bottom: 0;
+                max-width: 100% !important;
+                width: 100% !important;
+                order: 1 !important;
+                z-index: 2 !important;
+                position: relative !important;
+                padding-bottom: 10px !important;
             }
-            .hero-eyebrow { justify-content: center; font-size: 10px; letter-spacing: 2px; }
-            .hero-eyebrow::before { display: none; }
-            .hero-name { font-size: clamp(36px, 11vw, 52px); letter-spacing: -2px; line-height: 0.95; }
-            .hero-role { font-size: 13px; margin-bottom: 24px; }
-            .terminal-badge { font-size: 10px; padding: 6px 10px; margin-bottom: 16px; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-            .hero-cta-row { justify-content: center; gap: 10px; margin-bottom: 24px; }
-            .btn-primary, .btn-outline { font-size: 12px; padding: 11px 16px; }
-            .social-row { justify-content: center; }
+            .hero-eyebrow { justify-content: center !important; font-size: 10px !important; letter-spacing: 2px !important; }
+            .hero-eyebrow::before { display: none !important; }
+            .hero-name { font-size: clamp(32px, 9vw, 44px) !important; letter-spacing: -1px !important; line-height: 1.1 !important; }
+            .hero-role { font-size: 13px !important; margin-bottom: 20px !important; }
+            .terminal-badge { font-size: 10px !important; padding: 6px 10px !important; margin-bottom: 16px !important; max-width: 100% !important; display: inline-flex !important; }
+            .hero-cta-row { justify-content: center !important; gap: 10px !important; margin-bottom: 20px !important; flex-direction: row !important; }
+            .btn-primary, .btn-outline { font-size: 12px !important; padding: 10px 16px !important; white-space: nowrap !important; }
+            .social-row { justify-content: center !important; }
 
-            /* Visual: normal-flow block, fixed height, image absolute inside */
+            /* حاوية الصورة الإفتراضية لمنعها من القفز وتغطية الأزرار */
             .hero-visual {
-                order: 2;
-                width: 100%;
-                max-width: 100%;
-                height: 340px;
-                position: relative;
-                flex-shrink: 0;
-                margin-top: 20px;
+                order: 2 !important;
+                width: 100% !important;
+                max-width: 280px !important;
+                height: 260px !important;
+                position: relative !important;
+                display: flex !important;
+                align-items: flex-end !important;
+                justify-content: center !important;
+                margin: 20px auto 0 !important;
             }
 
-            /* Rings scaled down to fit mobile width */
-            .hex-ring:nth-child(1) { width: 220px; height: 220px; }
-            .hex-ring:nth-child(2) { width: 175px; height: 175px; }
-            .hex-ring:nth-child(3) { width: 255px; height: 255px; }
+            /* حلقات الخلفية مكيّفة ومتناسقة */
+            .hex-ring:nth-child(1) { width: 220px !important; height: 220px !important; top: 50% !important; left: 50% !important; }
+            .hex-ring:nth-child(2) { width: 180px !important; height: 180px !important; top: 50% !important; left: 50% !important; }
+            .hex-ring:nth-child(3) { width: 250px !important; height: 250px !important; top: 50% !important; left: 50% !important; }
 
-            /* Image absolutely positioned inside the visual block */
+            /* الصورة تأخذ مساحة مستقلة في الأسفل ولا تلمس الأزرار */
             .hero-image-wrap {
-                position: absolute;
-                bottom: 0;
-                left: 50%;
-                transform: translateX(-50%);
+                position: relative !important;
+                bottom: 0 !important;
+                left: auto !important;
+                transform: none !important;
+                z-index: 3 !important;
+                width: 100% !important;
+                display: flex !important;
+                justify-content: center !important;
             }
             .hero-image-wrap img {
-                width: 200px;
-                -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 90%);
-                mask-image: linear-gradient(to bottom, black 50%, transparent 90%);
+                width: 180px !important;
+                height: auto !important;
+                display: block !important;
+                -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 95%) !important;
+                mask-image: linear-gradient(to bottom, black 60%, transparent 95%) !important;
             }
-            .hero-scanline { width: 200px; }
+            .hero-scanline { width: 180px !important; left: 50% !important; transform: translateX(-50%) !important; }
 
-            /* Visitor badge stays top-right of the visual container */
+            /* شارة عدد الزوار */
             .visitor-badge {
-                top: 8px;
-                right: 8px;
-                font-size: 10px;
-                padding: 4px 9px;
-                gap: 4px;
+                top: -10px !important;
+                right: 50% !important;
+                transform: translateX(50%) !important;
+                font-size: 10px !important;
+                padding: 4px 9px !important;
+                white-space: nowrap !important;
             }
             .visitor-dot { width: 5px; height: 5px; }
 
-            /* Hide decorative elements */
-            .tech-float { display: none; }
-            .bg-word { display: none; }
+            /* إخفاء العناصر الجانبية التي تسبب مشاكل أبعاد في الهاتف */
+            .tech-float { display: none !important; }
+            .bg-word { display: none !important; }
 
-            /* Stats */
-            .stats-section { padding: 40px 5%; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .stat-num { font-size: 36px; letter-spacing: -2px; }
-            .stat-item { padding: 20px 12px; }
-            .stat-label { font-size: 10px; letter-spacing: 1px; }
+            /* تحسين تناسق باقي الأقسام في الجوال لضمان عدم حدوث أي خلل */
+            .stats-section { padding: 40px 5% !important; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            .stat-num { font-size: 32px !important; }
+            .stat-item { padding: 16px 8px !important; }
+            .stat-label { font-size: 9px !important; }
 
-            /* About */
-            .about-section { flex-direction: column; padding: 60px 5%; gap: 24px; }
-            .about-visual { max-width: 100%; width: 100%; }
-            .tilt-card { padding: 28px 20px; }
-            .tilt-card .card-icon { font-size: 48px; }
-            .about-text { font-size: 14px; }
-            .cert-badges { gap: 8px; }
-            .cert-badge { font-size: 11px; padding: 6px 10px; }
+            .about-section { flex-direction: column !important; padding: 60px 5% !important; gap: 30px !important; }
+            .about-visual { max-width: 100% !important; width: 100% !important; }
+            .tilt-card { padding: 24px 16px !important; }
+            .about-text { font-size: 14px !important; line-height: 1.7 !important; }
+            .cert-badges { gap: 6px !important; }
+            .cert-badge { font-size: 10px !important; padding: 5px 8px !important; }
 
-            /* Skills */
-            .skills-section { padding: 60px 5%; }
-            .skills-grid { grid-template-columns: 1fr; }
-            .skills-header { margin-bottom: 36px; }
-            .radar-wrap { display: none; }
+            .skills-section { padding: 60px 5% !important; }
+            .skills-grid { grid-template-columns: 1fr !important; }
+            .radar-wrap { display: none !important; }
 
-            /* Timeline */
-            .timeline-section { padding: 60px 5%; }
-            .timeline::before { left: 16px; }
-            .tl-item { padding-right: 0 !important; padding-left: 44px !important; justify-content: flex-start !important; }
-            .tl-item:nth-child(even) { padding-left: 44px !important; }
+            .timeline-section { padding: 60px 5% !important; }
+            .timeline::before { left: 16px !important; }
+            .tl-item { padding-right: 0 !important; padding-left: 40px !important; justify-content: flex-start !important; }
+            .tl-item:nth-child(even) { padding-left: 40px !important; }
             .tl-dot { left: 16px !important; width: 12px; height: 12px; }
-            .tl-card { max-width: 100%; padding: 18px 16px; }
-            .tl-card::before { display: none; }
-            .tl-title { font-size: 15px; }
+            .tl-card { max-width: 100% !important; padding: 16px !important; }
+            .tl-card::before { display: none !important; }
 
-            /* Projects */
-            .projects-section { padding: 60px 5%; }
-            .projects-grid { grid-template-columns: 1fr; }
-            .project-card { padding: 22px; }
+            .projects-section { padding: 60px 5% !important; }
+            .projects-grid { grid-template-columns: 1fr !important; }
 
-            /* CTF */
-            .challenge-section { padding: 60px 5%; }
-            .challenge-body { padding: 18px 16px; }
-            .cipher-display { font-size: 11px; letter-spacing: 0.5px; padding: 14px 12px; }
-            .challenge-actions { flex-direction: column; gap: 10px; }
-            .ctf-tabs { gap: 6px; }
-            .ctf-tab { font-size: 11px; padding: 6px 10px; }
-            .ctf-scoreboard { gap: 10px; }
-            .ctf-score-item { padding: 12px 14px; }
-            .ctf-score-num { font-size: 26px; }
-            .challenge-input { font-size: 13px; padding: 12px 14px; }
-            .ctf-verify-btn { font-size: 12px; padding: 12px; }
+            .challenge-section { padding: 60px 5% !important; }
+            .challenge-body { padding: 16px !important; }
+            .cipher-display { font-size: 11px !important; padding: 12px !important; }
+            .challenge-actions { flex-direction: column !important; gap: 10px !important; }
+            .ctf-tabs { gap: 4px !important; }
+            .ctf-tab { font-size: 10px !important; padding: 6px 8px !important; }
+            .ctf-score-num { font-size: 24px !important; }
 
-            /* Achievements */
-            .achievements-section { padding: 0 5% 50px; }
-            .achievements-grid { flex-direction: column; align-items: stretch; }
-            .achievement-badge { min-width: auto; }
+            .contact-section { flex-direction: column !important; padding: 60px 5% !important; gap: 30px !important; }
+            .contact-left, .contact-right { width: 100% !important; }
+            .contact-form-wrap { padding: 20px 14px !important; }
 
-            /* Contact */
-            .contact-section { flex-direction: column; padding: 60px 5%; gap: 40px; }
-            .contact-left, .contact-right { width: 100%; }
-            .contact-form-wrap { padding: 22px 16px; border-radius: 14px; }
-            .contact-intro { font-size: 14px; margin-bottom: 28px; }
-            .form-control { padding: 11px 14px; font-size: 13px; }
-            textarea.form-control { height: 120px; }
-            .send-btn { font-size: 13px; padding: 13px; }
-
-            /* Footer */
-            .footer { flex-direction: column; text-align: center; padding: 24px 5%; gap: 12px; }
-            .footer-copy { font-size: 12px; }
-            .footer-right { font-size: 10px; }
-
-            /* Section titles */
-            .section-title { font-size: clamp(24px, 8vw, 34px); }
-
-            /* Fixed elements */
-            .audio-player { bottom: 18px; left: 14px; }
-            #back-to-top { bottom: 18px; right: 14px; width: 40px; height: 40px; font-size: 14px; }
-            #section-progress { display: none; }
+            .footer { flex-direction: column !important; text-align: center !important; gap: 10px !important; }
+            #back-to-top { bottom: 18px !important; right: 14px !important; width: 40px !important; height: 40px !important; }
+            .audio-player { bottom: 18px !important; left: 14px !important; }
+            .section-title { font-size: clamp(24px, 8vw, 34px) !important; }
+            #section-progress { display: none !important; }
         }
+        
 
         /* AR specific */
         body.ar .hero-eyebrow::before { display: none; }
