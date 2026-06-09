@@ -215,9 +215,19 @@
         @keyframes blink { 50% { opacity: 0; } }
 
         /* ============================================================
-           HERO SECTION
+           HERO SECTION — DESKTOP
         ============================================================ */
-        .hero-section { min-height: 100vh; padding: 0 7%; display: flex; align-items: center; justify-content: space-between; gap: 60px; padding-top: 90px; position: relative; overflow: hidden; }
+        .hero-section {
+            min-height: 100vh;
+            padding: 0 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 60px;
+            padding-top: 90px;
+            position: relative;
+            overflow: hidden;
+        }
         .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
         .hero-grid::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(99,102,241,0.07), transparent); }
         .hero-glow { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%); top: 50%; right: 10%; transform: translateY(-50%); pointer-events: none; }
@@ -247,7 +257,20 @@
         .social-btn.ig:hover { background: #d6249f; color: #fff; border-color: transparent; box-shadow: 0 6px 20px rgba(214,36,159,0.5); }
         .social-btn.in:hover { background: #0077b5; color: #fff; border-color: #0077b5; box-shadow: 0 6px 20px rgba(0,119,181,0.5); }
         .social-btn.wa:hover { background: #25d366; color: #fff; border-color: #25d366; box-shadow: 0 6px 20px rgba(37,211,102,0.5); }
-        .hero-visual { flex: 1; max-width: 520px; position: relative; display: flex; align-items: flex-end; justify-content: center; height: 600px; z-index: 2; }
+
+        /* ============================================================
+           HERO VISUAL — DESKTOP
+        ============================================================ */
+        .hero-visual {
+            flex: 1;
+            max-width: 520px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            height: 600px;
+            z-index: 2;
+        }
         .hex-ring { position: absolute; border-radius: 50%; border: 1px solid; animation: spin linear infinite; }
         .hex-ring:nth-child(1) { width: 440px; height: 440px; border-color: rgba(0,229,255,0.15); animation-duration: 25s; top: 50%; left: 50%; transform: translate(-50%, -50%); }
         .hex-ring:nth-child(2) { width: 360px; height: 360px; border-color: rgba(99,102,241,0.2); border-style: dashed; animation-duration: 18s; animation-direction: reverse; top: 50%; left: 50%; transform: translate(-50%, -50%); }
@@ -258,8 +281,24 @@
         .tech-float:nth-child(6) { border-color: rgba(34,197,94,0.4); color: var(--green); bottom: 30%; left: 3%; animation-delay: 2s; }
         .tech-float:nth-child(7) { border-color: rgba(168,85,247,0.4); color: var(--accent2); bottom: 20%; right: 5%; animation-delay: 0.5s; }
         @keyframes float-badge { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
-        .hero-image-wrap { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); z-index: 3; }
-        .hero-image-wrap img { width: 400px; height: auto; -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 95%); mask-image: linear-gradient(to bottom, black 60%, transparent 95%); filter: drop-shadow(0 0 30px rgba(99,102,241,0.25)); transition: filter 0.4s ease; }
+
+        /* DESKTOP: hero image absolutely positioned inside visual */
+        .hero-image-wrap {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+        }
+        .hero-image-wrap img {
+            width: 400px;
+            height: auto;
+            -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 95%);
+            mask-image: linear-gradient(to bottom, black 60%, transparent 95%);
+            filter: drop-shadow(0 0 30px rgba(99,102,241,0.25));
+            transition: filter 0.4s ease;
+            display: block;
+        }
         .hero-image-wrap:hover img { filter: drop-shadow(0 0 50px rgba(0,229,255,0.35)); }
         .hero-scanline { position: absolute; left: 50%; transform: translateX(-50%); bottom: 0; width: 400px; height: 100%; pointer-events: none; z-index: 4; overflow: hidden; }
         .hero-scanline::before { content: ''; position: absolute; left: 0; right: 0; height: 80px; background: linear-gradient(to bottom, transparent, rgba(0,229,255,0.04), transparent); animation: scanline 4s linear infinite; }
@@ -267,13 +306,21 @@
         @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
         .bg-word { position: absolute; bottom: -20px; left: 5%; font-family: var(--font-display); font-size: clamp(80px, 12vw, 150px); font-weight: 900; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.04); letter-spacing: 8px; z-index: 0; pointer-events: none; direction: ltr; }
 
-        /* Visitor badge */
+        /* Visitor badge — desktop: inside hero-visual top-right */
         .visitor-badge {
-            position: absolute; top: 20px; right: 0;
-            display: inline-flex; align-items: center; gap: 6px;
-            background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25);
-            padding: 6px 12px; border-radius: 20px;
-            font-family: var(--font-mono); font-size: 11px; color: var(--green);
+            position: absolute;
+            top: 20px;
+            right: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(34,197,94,0.08);
+            border: 1px solid rgba(34,197,94,0.25);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--green);
             z-index: 10;
         }
         .visitor-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse-dot 2s infinite; box-shadow: 0 0 6px var(--green); }
@@ -289,7 +336,6 @@
         .stat-item:hover::before { transform: scaleX(1); }
         .stat-num { font-family: var(--font-display); font-size: clamp(36px, 5vw, 52px); font-weight: 900; letter-spacing: -3px; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; margin-bottom: 8px; }
         .stat-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
-        @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
 
         /* ============================================================
            ABOUT SECTION
@@ -341,7 +387,7 @@
         .chip { font-family: var(--font-mono); font-size: 11px; font-weight: 600; background: rgba(0,229,255,0.06); border: 1px solid rgba(0,229,255,0.2); color: var(--accent); padding: 3px 10px; border-radius: 4px; transition: all 0.25s; }
         .chip:hover { background: rgba(0,229,255,0.12); }
 
-        /* Radar chart section */
+        /* Radar chart */
         .radar-wrap { display: flex; justify-content: center; margin-top: 60px; }
         .radar-container { position: relative; width: 340px; height: 340px; }
         .radar-container svg { width: 100%; height: 100%; overflow: visible; }
@@ -397,53 +443,29 @@
         @keyframes pulse-dot { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.7; } }
 
         /* ============================================================
-           CTF CHALLENGE SECTION — MULTI-CHALLENGE
+           CTF CHALLENGE SECTION
         ============================================================ */
         .challenge-section { padding: 120px 7%; background: var(--bg2); border-top: 1px solid var(--border); }
         .challenge-header { text-align: center; margin-bottom: 60px; }
-
-        /* Score bar */
-        .ctf-scoreboard {
-            display: flex; align-items: center; justify-content: center; gap: 30px;
-            margin-bottom: 40px; flex-wrap: wrap;
-        }
-        .ctf-score-item {
-            text-align: center; background: var(--bg3);
-            border: 1px solid var(--border); border-radius: 12px; padding: 16px 24px;
-        }
+        .ctf-scoreboard { display: flex; align-items: center; justify-content: center; gap: 30px; margin-bottom: 40px; flex-wrap: wrap; }
+        .ctf-score-item { text-align: center; background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 16px 24px; }
         .ctf-score-num { font-family: var(--font-display); font-size: 32px; font-weight: 900; color: var(--accent); letter-spacing: -2px; }
         .ctf-score-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
-
-        /* Challenge tabs */
-        .ctf-tabs {
-            display: flex; gap: 8px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap;
-        }
-        .ctf-tab {
-            font-family: var(--font-mono); font-size: 12px; padding: 8px 18px;
-            border-radius: 6px; border: 1px solid var(--border); background: transparent;
-            color: var(--muted); transition: all 0.25s ease; display: flex; align-items: center; gap: 6px;
-            cursor: none; position: relative;
-        }
+        .ctf-tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
+        .ctf-tab { font-family: var(--font-mono); font-size: 12px; padding: 8px 18px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--muted); transition: all 0.25s ease; display: flex; align-items: center; gap: 6px; cursor: none; position: relative; }
         .ctf-tab.active { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,0.06); }
         .ctf-tab.solved { border-color: var(--green); color: var(--green); }
         .ctf-tab.solved::after { content: '✓'; margin-left: 4px; }
         .ctf-tab:hover:not(.active):not(.solved) { border-color: var(--border2); color: var(--text); }
-
         .challenge-panel { display: none; }
         .challenge-panel.active { display: block; }
-
-        .challenge-wrapper {
-            max-width: 680px; margin: 0 auto; background: var(--bg3);
-            border: 1px solid rgba(0,229,255,0.2); border-radius: 20px; overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
+        .challenge-wrapper { max-width: 680px; margin: 0 auto; background: var(--bg3); border: 1px solid rgba(0,229,255,0.2); border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
         .challenge-topbar { background: rgba(0,229,255,0.04); border-bottom: 1px solid rgba(0,229,255,0.12); padding: 14px 24px; display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); flex-wrap: wrap; }
         .challenge-topbar .ctf-badge { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); color: var(--green); padding: 2px 10px; border-radius: 4px; font-size: 10px; font-weight: 700; letter-spacing: 1px; }
         .ctf-badge-medium { background: rgba(245,158,11,0.1) !important; border-color: rgba(245,158,11,0.3) !important; color: #f59e0b !important; }
         .ctf-badge-hard { background: rgba(239,68,68,0.1) !important; border-color: rgba(239,68,68,0.3) !important; color: #ef4444 !important; }
         .ctf-icon { color: var(--accent); }
         .ctf-points { margin-left: auto; font-weight: 700; color: var(--accent); }
-
         .challenge-body { padding: 30px; }
         .challenge-desc { font-size: 14px; color: var(--muted); margin-bottom: 20px; line-height: 1.7; font-family: var(--font-mono); }
         .cipher-display { background: #000; border: 1px dashed rgba(34,197,94,0.3); border-radius: 10px; padding: 18px 20px; font-family: var(--font-mono); font-size: 14px; color: var(--green); letter-spacing: 2px; margin-bottom: 24px; word-break: break-all; position: relative; overflow: hidden; }
@@ -463,16 +485,10 @@
         .hint-box { margin-top: 14px; background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2); padding: 12px 16px; border-radius: 8px; font-family: var(--font-mono); font-size: 12px; color: #f59e0b; display: none; }
         .hint-box.visible { display: block; }
 
-        /* Achievements row */
+        /* Achievements */
         .achievements-section { padding: 0 7% 80px; background: var(--bg2); }
         .achievements-grid { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
-        .achievement-badge {
-            display: flex; align-items: center; gap: 12px;
-            background: var(--bg3); border: 1px solid var(--border);
-            border-radius: 12px; padding: 16px 20px; min-width: 200px;
-            transition: all 0.3s ease; position: relative; overflow: hidden;
-            opacity: 0.4; filter: grayscale(1);
-        }
+        .achievement-badge { display: flex; align-items: center; gap: 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; min-width: 200px; transition: all 0.3s ease; position: relative; overflow: hidden; opacity: 0.4; filter: grayscale(1); }
         .achievement-badge.unlocked { opacity: 1; filter: none; border-color: rgba(245,158,11,0.4); }
         .achievement-badge.unlocked::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at top right, rgba(245,158,11,0.08), transparent); }
         .achievement-icon { font-size: 28px; }
@@ -564,9 +580,7 @@
         body.normal-mode .hero-name { color: #1e293b; }
         body.normal-mode .hero-role { color: #475569; }
         body.normal-mode .hero-role .typed-role { color: #4f46e5; }
-        body.normal-mode .hero-image-wrap { position: relative; left: auto; transform: none; bottom: auto; }
-        body.normal-mode .hero-image-wrap img { -webkit-mask-image: none; mask-image: none; filter: none; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); width: 340px; }
-        body.normal-mode .hero-visual { height: auto; justify-content: center; align-items: center; }
+        body.normal-mode .hero-image-wrap img { -webkit-mask-image: none; mask-image: none; filter: none; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
         body.normal-mode .social-btn { background: #fff; border-color: #e2e8f0; color: #475569; }
         body.normal-mode .stats-section { background: #fff; border-color: #e2e8f0; }
         body.normal-mode .stats-grid { background: #e2e8f0; }
@@ -633,158 +647,35 @@
         body.normal-mode #back-to-top { background: rgba(248,250,252,0.95); border-color: rgba(99,102,241,0.3); color: #4f46e5; }
 
         /* ============================================================
-           RESPONSIVE — MOBILE FIRST (iPhone 375–430px)
+           RESPONSIVE — TABLET 769px–1024px
         ============================================================ */
-        @media (max-width: 480px) {
-            .hero-section {
-                flex-direction: column;
-                text-align: center;
-                padding: 100px 5% 0; 
-                min-height: auto;
-                gap: 40px; 
-                align-items: center;
-                overflow: visible;
-            }
-            .hero-content {
-                max-width: 100%;
-                width: 100%;
-                order: 1;
-                z-index: 2;
-                position: relative;
-                padding-bottom: 0; 
-            }
-            .hero-eyebrow, .hero-cta-row, .social-row { justify-content: center; }
-            .hero-name { font-size: 42px; letter-spacing: -2px; }
-            .hero-role { font-size: 13px; }
-            .terminal-badge { font-size: 11px; padding: 6px 12px; }
-            .btn-primary, .btn-outline { font-size: 12px; padding: 11px 18px; }
-            .hero-visual {
-                order: 2;
-                width: 100%;
-                max-width: 100%;
-                height: 340px; 
-                position: relative;
-                flex-shrink: 0;
-                margin-top: 20px; 
-            }
-            .hex-ring:nth-child(1) { width: 260px; height: 260px; }
-            .hex-ring:nth-child(2) { width: 210px; height: 210px; }
-            .hex-ring:nth-child(3) { width: 300px; height: 300px; }
-            .hero-image-wrap img { width: 220px; }
-            .hero-scanline { width: 220px; }
-            .tech-float { display: none; }
-            .bg-word { display: none; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .stat-num { font-size: 36px; }
-            .stat-item { padding: 20px 12px; }
-            .about-section { flex-direction: column; padding: 60px 5%; gap: 30px; }
-            .about-visual { max-width: 100%; width: 100%; }
-            .tilt-card { padding: 30px 20px; }
-            .tilt-card .card-icon { font-size: 48px; }
-            .about-text { font-size: 14px; }
-            .skills-section { padding: 60px 5%; }
-            .skills-grid { grid-template-columns: 1fr; }
-            .skills-header { margin-bottom: 40px; }
-            .radar-wrap { display: none; } /* hide radar on very small screens */
-            .timeline-section { padding: 60px 5%; }
-            .timeline::before { left: 20px; }
-            .tl-item { padding-right: 0 !important; padding-left: 50px !important; justify-content: flex-start !important; }
-            .tl-item:nth-child(even) { padding-left: 50px !important; }
-            .tl-dot { left: 20px !important; }
-            .tl-card { max-width: 100%; }
-            .tl-card::before { display: none; }
-            .projects-section { padding: 60px 5%; }
-            .projects-grid { grid-template-columns: 1fr; }
-            .challenge-section { padding: 60px 5%; }
-            .challenge-body { padding: 20px; }
-            .cipher-display { font-size: 12px; letter-spacing: 1px; }
-            .challenge-actions { flex-direction: column; }
-            .ctf-tabs { gap: 6px; }
-            .ctf-tab { font-size: 11px; padding: 6px 12px; }
-            .ctf-scoreboard { gap: 12px; }
-            .ctf-score-item { padding: 12px 16px; }
-            .ctf-score-num { font-size: 26px; }
-            .achievements-section { padding: 0 5% 50px; }
-            .achievements-grid { flex-direction: column; align-items: stretch; }
-            .achievement-badge { min-width: auto; }
-            .contact-section { flex-direction: column; padding: 60px 5%; gap: 40px; }
-            .contact-form-wrap { padding: 24px 20px; }
-            .footer { flex-direction: column; text-align: center; padding: 24px 5%; }
-            .navbar { padding: 14px 5%; }
-            .section-title { font-size: clamp(24px, 8vw, 36px); }
-            #section-progress { display: none; }
-            .audio-player { bottom: 20px; left: 16px; }
-            #back-to-top { bottom: 20px; right: 16px; }
-        }
-
-        @media (min-width: 481px) and (max-width: 768px) {
-            .navbar { padding: 16px 5%; }
-            .nav-links, .contact-nav-btn { display: none; }
-            .hamburger { display: flex; }
-            .hero-section {
-                flex-direction: column;
-                text-align: center;
-                padding: 110px 5% 0; 
-                min-height: auto;
-                gap: 50px; 
-                align-items: center;
-                overflow: visible;
-            }            
-            .hero-content {
-                max-width: 100%;
-                order: 1;
-                padding-bottom: 0; 
-                z-index: 2;
-                position: relative;
-            }
-            .hero-eyebrow, .hero-cta-row, .social-row { justify-content: center; }
-            .hero-visual {
-                order: 2;
-                width: 100%;
-                max-width: 100%;
-                height: 380px; /* زيادة الارتفاع لاحتواء الصورة بالكامل */
-                position: relative;
-                flex-shrink: 0;
-                margin-top: 20px; /* دفع الصورة للأسفل لتجنب أي تداخل */
-            }
-            .hex-ring:nth-child(1) { width: 300px; height: 300px; }
-            .hex-ring:nth-child(2) { width: 240px; height: 240px; }
-            .hex-ring:nth-child(3) { width: 340px; height: 340px; }
-            .hero-image-wrap img { width: 260px; }
-            .hero-scanline { width: 260px; }
-            .tech-float { display: none; }
-            .bg-word { display: none; }
-            .about-section, .skills-section, .projects-section, .challenge-section, .contact-section, .timeline-section { padding: 80px 5%; }
-            .stats-section { padding: 40px 5%; }
-            .about-section { flex-direction: column; align-items: center; }
-            .about-visual { max-width: 100%; }
-            .skills-grid, .projects-grid { grid-template-columns: 1fr; }
-            .timeline::before { left: 20px; }
-            .tl-item { padding-right: 0 !important; padding-left: 50px !important; justify-content: flex-start !important; }
-            .tl-item:nth-child(even) { padding-left: 50px !important; }
-            .tl-dot { left: 20px !important; }
-            .tl-card { max-width: 100%; }
-            .contact-section { flex-direction: column; }
-            .footer { flex-direction: column; text-align: center; padding: 30px 5%; }
-            .radar-container { width: 280px; height: 280px; }
-            .achievements-grid { flex-direction: column; }
-        }
-
-        @media (max-width: 768px) {
-            .hamburger { display: flex; }
-            .nav-links, .contact-nav-btn { display: none; }
-        }
-
         @media (max-width: 1024px) and (min-width: 769px) {
-            .hero-section { flex-direction: column; text-align: center; padding-top: 110px; }
-            .hero-content { max-width: 100%; }
+            .navbar { padding: 16px 5%; }
+            .hero-section {
+                flex-direction: column;
+                text-align: center;
+                padding: 110px 5% 60px;
+                min-height: auto;
+                gap: 0;
+                align-items: center;
+            }
+            .hero-content { max-width: 100%; order: 1; }
             .hero-eyebrow, .hero-cta-row, .social-row { justify-content: center; }
-            .hero-visual { height: 380px; width: 100%; max-width: 100%; }
+            .hero-visual {
+                order: 2;
+                width: 100%;
+                max-width: 100%;
+                height: 380px;
+                position: relative;
+                flex-shrink: 0;
+                margin-top: 20px;
+            }
             .hex-ring:nth-child(1) { width: 340px; height: 340px; }
             .hex-ring:nth-child(2) { width: 280px; height: 280px; }
             .hex-ring:nth-child(3) { width: 380px; height: 380px; }
             .hero-image-wrap img { width: 300px; }
             .hero-scanline { width: 300px; }
+            .visitor-badge { top: 10px; right: 10px; }
             .bg-word { display: none; }
             .tech-float { display: none; }
             .about-section { flex-direction: column; align-items: center; }
@@ -796,6 +687,245 @@
             .tl-item:nth-child(even) { padding-left: 50px !important; }
             .tl-dot { left: 20px !important; }
             .tl-card { max-width: 100%; }
+        }
+
+        /* ============================================================
+           RESPONSIVE — MOBILE 481px–768px
+        ============================================================ */
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            .nav-links, .contact-nav-btn { display: none; }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+            .navbar { padding: 16px 5%; }
+            /* HERO: stack vertically, image below content in normal flow */
+            .hero-section {
+                flex-direction: column;
+                text-align: center;
+                padding: 90px 5% 0;
+                min-height: auto;
+                gap: 0;
+                align-items: center;
+                overflow: visible;
+            }
+            .hero-content {
+                max-width: 100%;
+                order: 1;
+                padding-bottom: 30px;
+                z-index: 2;
+                position: relative;
+            }
+            .hero-eyebrow, .hero-cta-row, .social-row { justify-content: center; }
+            .hero-cta-row { margin-bottom: 28px; }
+
+            /* Visual becomes a normal-flow block below content */
+            .hero-visual {
+                order: 2;
+                width: 100%;
+                max-width: 100%;
+                height: 320px;
+                position: relative;
+                flex-shrink: 0;
+            }
+            .hex-ring:nth-child(1) { width: 300px; height: 300px; }
+            .hex-ring:nth-child(2) { width: 240px; height: 240px; }
+            .hex-ring:nth-child(3) { width: 340px; height: 340px; }
+            .hero-image-wrap {
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            .hero-image-wrap img { width: 260px; }
+            .hero-scanline { width: 260px; }
+
+            /* Visitor badge: move outside hero-visual to bottom-right of visual */
+            .visitor-badge {
+                top: 10px;
+                right: 10px;
+                font-size: 10px;
+                padding: 5px 10px;
+            }
+
+            .tech-float { display: none; }
+            .bg-word { display: none; }
+
+            /* Sections */
+            .about-section, .skills-section, .projects-section,
+            .challenge-section, .contact-section, .timeline-section { padding: 70px 5%; }
+            .stats-section { padding: 40px 5%; }
+            .about-section { flex-direction: column; align-items: center; }
+            .about-visual { max-width: 100%; }
+            .skills-grid, .projects-grid { grid-template-columns: 1fr; }
+            .timeline::before { left: 20px; }
+            .tl-item { padding-right: 0 !important; padding-left: 50px !important; justify-content: flex-start !important; }
+            .tl-item:nth-child(even) { padding-left: 50px !important; }
+            .tl-dot { left: 20px !important; }
+            .tl-card { max-width: 100%; }
+            .contact-section { flex-direction: column; }
+            .contact-right { width: 100%; }
+            .contact-form-wrap { padding: 28px 20px; }
+            .footer { flex-direction: column; text-align: center; padding: 30px 5%; }
+            .radar-container { width: 280px; height: 280px; }
+            .achievements-grid { flex-direction: column; }
+            .achievement-badge { min-width: auto; }
+        }
+
+        /* ============================================================
+           RESPONSIVE — SMALL MOBILE ≤480px  (iPhone SE / 375–430px)
+        ============================================================ */
+        @media (max-width: 480px) {
+            .navbar { padding: 14px 5%; }
+
+            /* HERO: fully stacked, image in normal flow */
+            .hero-section {
+                flex-direction: column;
+                text-align: center;
+                padding: 80px 5% 0;
+                min-height: auto;
+                gap: 0;
+                align-items: center;
+                overflow: visible;
+            }
+            .hero-content {
+                max-width: 100%;
+                width: 100%;
+                order: 1;
+                z-index: 2;
+                position: relative;
+                padding-bottom: 24px;
+            }
+            .hero-eyebrow { justify-content: center; font-size: 10px; letter-spacing: 2px; }
+            .hero-eyebrow::before { display: none; }
+            .hero-name { font-size: clamp(36px, 11vw, 52px); letter-spacing: -2px; line-height: 0.95; }
+            .hero-role { font-size: 13px; margin-bottom: 24px; }
+            .terminal-badge { font-size: 10px; padding: 6px 10px; margin-bottom: 16px; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .hero-cta-row { justify-content: center; gap: 10px; margin-bottom: 24px; }
+            .btn-primary, .btn-outline { font-size: 12px; padding: 11px 16px; }
+            .social-row { justify-content: center; }
+
+            /* Visual: normal-flow block, fixed height, image absolute inside */
+            .hero-visual {
+                order: 2;
+                width: 100%;
+                max-width: 100%;
+                /* Enough height to show the image (faded at bottom) */
+                height: 280px;
+                position: relative;
+                flex-shrink: 0;
+                /* No margin-top — image butts up against the content */
+            }
+
+            /* Rings scaled down to fit mobile width */
+            .hex-ring:nth-child(1) { width: 220px; height: 220px; }
+            .hex-ring:nth-child(2) { width: 175px; height: 175px; }
+            .hex-ring:nth-child(3) { width: 255px; height: 255px; }
+
+            /* Image absolutely positioned inside the visual block */
+            .hero-image-wrap {
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            .hero-image-wrap img {
+                width: 200px;
+                -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 90%);
+                mask-image: linear-gradient(to bottom, black 50%, transparent 90%);
+            }
+            .hero-scanline { width: 200px; }
+
+            /* Visitor badge stays top-right of the visual container */
+            .visitor-badge {
+                top: 8px;
+                right: 8px;
+                font-size: 10px;
+                padding: 4px 9px;
+                gap: 4px;
+            }
+            .visitor-dot { width: 5px; height: 5px; }
+
+            /* Hide decorative elements */
+            .tech-float { display: none; }
+            .bg-word { display: none; }
+
+            /* Stats */
+            .stats-section { padding: 40px 5%; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .stat-num { font-size: 36px; letter-spacing: -2px; }
+            .stat-item { padding: 20px 12px; }
+            .stat-label { font-size: 10px; letter-spacing: 1px; }
+
+            /* About */
+            .about-section { flex-direction: column; padding: 60px 5%; gap: 24px; }
+            .about-visual { max-width: 100%; width: 100%; }
+            .tilt-card { padding: 28px 20px; }
+            .tilt-card .card-icon { font-size: 48px; }
+            .about-text { font-size: 14px; }
+            .cert-badges { gap: 8px; }
+            .cert-badge { font-size: 11px; padding: 6px 10px; }
+
+            /* Skills */
+            .skills-section { padding: 60px 5%; }
+            .skills-grid { grid-template-columns: 1fr; }
+            .skills-header { margin-bottom: 36px; }
+            .radar-wrap { display: none; }
+
+            /* Timeline */
+            .timeline-section { padding: 60px 5%; }
+            .timeline::before { left: 16px; }
+            .tl-item { padding-right: 0 !important; padding-left: 44px !important; justify-content: flex-start !important; }
+            .tl-item:nth-child(even) { padding-left: 44px !important; }
+            .tl-dot { left: 16px !important; width: 12px; height: 12px; }
+            .tl-card { max-width: 100%; padding: 18px 16px; }
+            .tl-card::before { display: none; }
+            .tl-title { font-size: 15px; }
+
+            /* Projects */
+            .projects-section { padding: 60px 5%; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .project-card { padding: 22px; }
+
+            /* CTF */
+            .challenge-section { padding: 60px 5%; }
+            .challenge-body { padding: 18px 16px; }
+            .cipher-display { font-size: 11px; letter-spacing: 0.5px; padding: 14px 12px; }
+            .challenge-actions { flex-direction: column; gap: 10px; }
+            .ctf-tabs { gap: 6px; }
+            .ctf-tab { font-size: 11px; padding: 6px 10px; }
+            .ctf-scoreboard { gap: 10px; }
+            .ctf-score-item { padding: 12px 14px; }
+            .ctf-score-num { font-size: 26px; }
+            .challenge-input { font-size: 13px; padding: 12px 14px; }
+            .ctf-verify-btn { font-size: 12px; padding: 12px; }
+
+            /* Achievements */
+            .achievements-section { padding: 0 5% 50px; }
+            .achievements-grid { flex-direction: column; align-items: stretch; }
+            .achievement-badge { min-width: auto; }
+
+            /* Contact */
+            .contact-section { flex-direction: column; padding: 60px 5%; gap: 40px; }
+            .contact-left, .contact-right { width: 100%; }
+            .contact-form-wrap { padding: 22px 16px; border-radius: 14px; }
+            .contact-intro { font-size: 14px; margin-bottom: 28px; }
+            .form-control { padding: 11px 14px; font-size: 13px; }
+            textarea.form-control { height: 120px; }
+            .send-btn { font-size: 13px; padding: 13px; }
+
+            /* Footer */
+            .footer { flex-direction: column; text-align: center; padding: 24px 5%; gap: 12px; }
+            .footer-copy { font-size: 12px; }
+            .footer-right { font-size: 10px; }
+
+            /* Section titles */
+            .section-title { font-size: clamp(24px, 8vw, 34px); }
+
+            /* Fixed elements */
+            .audio-player { bottom: 18px; left: 14px; }
+            #back-to-top { bottom: 18px; right: 14px; width: 40px; height: 40px; font-size: 14px; }
+            #section-progress { display: none; }
         }
 
         /* AR specific */
@@ -931,8 +1061,8 @@
             <img src="Images/me.png" alt="Mohsen Alsharafi" />
         </div>
         <div class="hero-scanline"><div class="cipher-scanline"></div></div>
-        <!-- Visitor Badge -->
-        <div class="visitor-badge" style="position:absolute;top:0;right:0;">
+        <!-- Visitor Badge inside visual -->
+        <div class="visitor-badge">
             <div class="visitor-dot"></div>
             <span id="visitor-count">247</span> online
         </div>
@@ -1126,15 +1256,10 @@
     <div class="radar-wrap reveal reveal-delay-2">
         <div class="radar-container">
             <svg id="radar-svg" viewBox="-20 -20 340 340" xmlns="http://www.w3.org/2000/svg">
-                <!-- Grid polygons drawn by JS -->
                 <g id="radar-grid"></g>
-                <!-- Axes drawn by JS -->
                 <g id="radar-axes"></g>
-                <!-- Data polygon -->
                 <polygon id="radar-data" class="radar-fill" points=""/>
-                <!-- Dots -->
                 <g id="radar-dots"></g>
-                <!-- Labels -->
                 <g id="radar-labels"></g>
             </svg>
         </div>
@@ -1158,7 +1283,7 @@
         <div class="tl-item reveal">
             <div class="tl-dot"></div>
             <div class="tl-card">
-                <div class="tl-year">2022 — PRESENT</div>
+                <div class="tl-year">2024 — PRESENT</div>
                 <div class="tl-title en-text">BSc Computer Science (Cyber Security)</div>
                 <div class="tl-title ar-text">بكالوريوس علوم الحاسوب — أمن سيبراني</div>
                 <div class="tl-org">Asia Pacific University (APU), Kuala Lumpur</div>
@@ -1167,11 +1292,10 @@
                 <div class="tl-tags"><span class="tl-tag">Networking</span><span class="tl-tag">Cryptography</span><span class="tl-tag">OS Security</span></div>
             </div>
         </div>
-
         <div class="tl-item reveal reveal-delay-1">
             <div class="tl-dot"></div>
             <div class="tl-card">
-                <div class="tl-year">2023</div>
+                <div class="tl-year">2025</div>
                 <div class="tl-title en-text">First CTF Participation</div>
                 <div class="tl-title ar-text">أول مشاركة في CTF</div>
                 <div class="tl-org">National-Level Capture The Flag</div>
@@ -1180,11 +1304,10 @@
                 <div class="tl-tags"><span class="tl-tag">CTF</span><span class="tl-tag">Crypto</span><span class="tl-tag">Web Exploit</span></div>
             </div>
         </div>
-
         <div class="tl-item reveal reveal-delay-2">
             <div class="tl-dot"></div>
             <div class="tl-card">
-                <div class="tl-year">2024</div>
+                <div class="tl-year">2025</div>
                 <div class="tl-title en-text">Virtual Security Lab Setup</div>
                 <div class="tl-title ar-text">إنشاء مختبر أمني افتراضي</div>
                 <div class="tl-org">Personal Home Lab</div>
@@ -1193,11 +1316,10 @@
                 <div class="tl-tags"><span class="tl-tag">Kali Linux</span><span class="tl-tag">VMware</span><span class="tl-tag">Metasploit</span></div>
             </div>
         </div>
-
         <div class="tl-item reveal reveal-delay-3">
             <div class="tl-dot"></div>
             <div class="tl-card">
-                <div class="tl-year">2024 — 2025</div>
+                <div class="tl-year">2024 — PRESENT</div>
                 <div class="tl-title en-text">Security Tools Development</div>
                 <div class="tl-title ar-text">تطوير أدوات أمنية</div>
                 <div class="tl-org">Personal Projects</div>
@@ -1206,7 +1328,6 @@
                 <div class="tl-tags"><span class="tl-tag">Python</span><span class="tl-tag">GitHub</span><span class="tl-tag">Open Source</span></div>
             </div>
         </div>
-
         <div class="tl-item reveal reveal-delay-4">
             <div class="tl-dot"></div>
             <div class="tl-card">
@@ -1247,7 +1368,7 @@
             <p class="project-desc en-text">A Python-based packet sniffer that captures and analyzes live network traffic, identifies suspicious patterns, and logs potential threats in real-time.</p>
             <p class="project-desc ar-text">أداة بايثون لالتقاط وتحليل حركة مرور الشبكة الحية وتسجيل التهديدات المحتملة.</p>
             <div class="project-stack"><span class="stack-tag">Python</span><span class="stack-tag">Scapy</span><span class="stack-tag">Socket</span><span class="stack-tag">pcap</span></div>
-            <div class="project-status" style="color:var(--green);"><span class="status-dot green"></span><span class="en-text">Active</span><span class="ar-text">نشط</span></div>
+            <div class="project-status" style="color:var(--green);"><span class="status-dot green"></span><span class="en-text">In Progress</span><span class="ar-text">قيد الإنجاز</span></div>
         </div>
         <div class="project-card reveal reveal-delay-1">
             <div class="project-top">
@@ -1258,7 +1379,7 @@
             <p class="project-desc en-text">A CLI tool that audits password strength against common attack vectors including dictionary attacks, brute force entropy analysis, and HIBP breach checks.</p>
             <p class="project-desc ar-text">أداة سطر أوامر لمراجعة قوة كلمات المرور وكشف الأنماط الضعيفة.</p>
             <div class="project-stack"><span class="stack-tag">Python</span><span class="stack-tag">HashLib</span><span class="stack-tag">API</span><span class="stack-tag">RegEx</span></div>
-            <div class="project-status" style="color:var(--green);"><span class="status-dot green"></span><span class="en-text">Active</span><span class="ar-text">نشط</span></div>
+            <div class="project-status" style="color:var(--green);"><span class="status-dot green"></span><span class="en-text">In Progress</span><span class="ar-text">قيد الإنجاز</span></div>
         </div>
         <div class="project-card reveal reveal-delay-2">
             <div class="project-top">
@@ -1280,7 +1401,7 @@
             <p class="project-desc en-text">A configured DVWA environment with custom exploit scripts testing SQL Injection, XSS, CSRF, File Upload bypass, and Command Injection.</p>
             <p class="project-desc ar-text">بيئة DVWA مهيأة مع سكربتات مخصصة لاختبار ثغرات الويب الشائعة.</p>
             <div class="project-stack"><span class="stack-tag">PHP</span><span class="stack-tag">MySQL</span><span class="stack-tag">DVWA</span><span class="stack-tag">Burp Suite</span></div>
-            <div class="project-status" style="color:var(--green);"><span class="status-dot green"></span><span class="en-text">Active</span><span class="ar-text">نشط</span></div>
+            <div class="project-status" style="color:var(--green);"><span class="status-dot green"></span><span class="en-text">In Progress</span><span class="ar-text">قيد الإنجاز</span></div>
         </div>
         <div class="project-card reveal reveal-delay-4">
             <div class="project-top">
@@ -1302,13 +1423,13 @@
             <p class="project-desc en-text">Documented writeups and solutions for various Capture The Flag challenges covering cryptography, steganography, reverse engineering, and web exploitation.</p>
             <p class="project-desc ar-text">توثيق شامل لحلول تحديات CTF تغطي التشفير وإخفاء المعلومات والهندسة العكسية.</p>
             <div class="project-stack"><span class="stack-tag">Crypto</span><span class="stack-tag">Rev. Eng.</span><span class="stack-tag">Stego</span><span class="stack-tag">Web Exploit</span></div>
-            <div class="project-status" style="color:var(--green);"><span class="status-dot green"></span><span class="en-text">Ongoing</span><span class="ar-text">مستمر</span></div>
+            <div class="project-status" style="color:var(--green);"><span class="status-dot green"></span><span class="en-text">In Progress</span><span class="ar-text">قيد الإنجاز</span></div>
         </div>
     </div>
 </section>
 
 <!-- ============================================================
-     CTF CHALLENGE SECTION — 4 CHALLENGES
+     CTF CHALLENGE SECTION
 ============================================================ -->
 <section class="challenge-section" id="challenge">
     <div class="challenge-header">
@@ -1319,7 +1440,6 @@
             <span class="ar-text">تحدي <span class="accent-word">التشفير</span></span>
         </h2>
 
-        <!-- Scoreboard -->
         <div class="ctf-scoreboard reveal reveal-delay-1">
             <div class="ctf-score-item">
                 <div class="ctf-score-num" id="ctf-solved-count">0</div>
@@ -1339,7 +1459,6 @@
         </div>
     </div>
 
-    <!-- Tabs -->
     <div class="ctf-tabs reveal reveal-delay-2">
         <button class="ctf-tab active" id="tab-0" onclick="switchChallenge(0)"><i class="fas fa-hashtag"></i> <span class="en-text">Base64</span><span class="ar-text">بيس64</span></button>
         <button class="ctf-tab" id="tab-1" onclick="switchChallenge(1)"><i class="fas fa-key"></i> <span class="en-text">Caesar</span><span class="ar-text">قيصر</span></button>
@@ -1379,7 +1498,7 @@
         </div>
     </div>
 
-    <!-- Challenge 1: Caesar Cipher -->
+    <!-- Challenge 1: Caesar -->
     <div class="challenge-panel" id="panel-1">
         <div class="challenge-wrapper reveal reveal-delay-2">
             <div class="challenge-topbar">
@@ -1393,7 +1512,7 @@
                 <p class="challenge-desc en-text"><span style="color:var(--green);">$</span> Julius Caesar used a cipher to protect his messages. Decode this intercepted transmission — the shift is hidden in the flag format <code style="color:var(--accent);">FLAG{...}</code>:</p>
                 <p class="challenge-desc ar-text"><span style="color:var(--green);">$</span> يوليوس قيصر استخدم تشفيراً لحماية رسائله. فك تشفير هذه الرسالة بصيغة <code style="color:var(--accent);">FLAG{...}</code>:</p>
                 <div class="cipher-display" style="position:relative; font-size:13px; letter-spacing:1px;">
-                    IOYN{zljby1ot_pz_lclyf_dolylu}
+                    IOYN{zljby1af_pz_lclyf_dolyl}
                     <span class="cipher-label">ROT-7</span>
                     <div class="cipher-scanline"></div>
                 </div>
@@ -1403,15 +1522,15 @@
                     <button class="ctf-hint-btn" onclick="showHint('hint-1')"><span class="en-text">💡 Hint</span><span class="ar-text">💡 تلميح</span></button>
                 </div>
                 <div class="hint-box" id="hint-1">
-                    <span class="en-text">🔍 Caesar cipher shifts each letter by a fixed number. The encoded text starts with "IOYN" — notice how far that is from "FLAG" in the alphabet! Each letter is shifted by the same amount.</span>
-                    <span class="ar-text">🔍 تشفير قيصر يزيح كل حرف بعدد ثابت. "IOYN" يحتاج إلى تحويل إلى "FLAG" — احسب المسافة بين الحروف.</span>
+                    <span class="en-text">🔍 Caesar cipher shifts each letter by a fixed number. The encoded text starts with "IOYN" — notice how far that is from "FLAG"! There are TWO ROTs.</span>
+                    <span class="ar-text">🔍 ROTs تشفير قيصر يزيح كل حرف بعدد ثابت + يوجد 2. "IOYN" يحتاج إلى تحويل إلى "FLAG".</span>
                 </div>
                 <div id="result-1" class="challenge-result"></div>
             </div>
         </div>
     </div>
 
-    <!-- Challenge 2: Hex Decode -->
+    <!-- Challenge 2: Hex -->
     <div class="challenge-panel" id="panel-2">
         <div class="challenge-wrapper reveal reveal-delay-2">
             <div class="challenge-topbar">
@@ -1437,15 +1556,15 @@
                     <button class="ctf-hint-btn" onclick="showHint('hint-2')"><span class="en-text">💡 Hint</span><span class="ar-text">💡 تلميح</span></button>
                 </div>
                 <div class="hint-box" id="hint-2">
-                    <span class="en-text">🔍 Each pair of hex digits represents one ASCII character. For example, <code>70</code> = "p", <code>61</code> = "a". You can use Python: <code>bytes.fromhex("70617373...").decode()</code></span>
-                    <span class="ar-text">🔍 كل زوج من أرقام Hex يمثل حرفاً ASCII واحداً. يمكنك استخدام Python: <code>bytes.fromhex("...").decode()</code></span>
+                    <span class="en-text">🔍 Each pair of hex digits represents one ASCII character. <code>70</code> = "p", <code>61</code> = "a". Python: <code>bytes.fromhex("70617373...").decode()</code></span>
+                    <span class="ar-text">🔍 كل زوج Hex يمثل حرفاً ASCII. Python: <code>bytes.fromhex("...").decode()</code></span>
                 </div>
                 <div id="result-2" class="challenge-result"></div>
             </div>
         </div>
     </div>
 
-    <!-- Challenge 3: Logic Riddle -->
+    <!-- Challenge 3: Logic -->
     <div class="challenge-panel" id="panel-3">
         <div class="challenge-wrapper reveal reveal-delay-2">
             <div class="challenge-topbar">
@@ -1473,8 +1592,8 @@
                     <button class="ctf-hint-btn" onclick="showHint('hint-3')"><span class="en-text">💡 Hint</span><span class="ar-text">💡 تلميح</span></button>
                 </div>
                 <div class="hint-box" id="hint-3">
-                    <span class="en-text">🔍 In cybersecurity we always say "know your attack surface" — and this thing is a visual representation used for navigation. It shows things but contains none of them.</span>
-                    <span class="ar-text">🔍 في الأمن السيبراني نقول "اعرف سطح الهجوم" — هذا الشيء تمثيل بصري يُستخدم في التنقل. يُظهر الأشياء لكنه لا يحتويها.</span>
+                    <span class="en-text">🔍 In cybersecurity we always say "know your attack surface" — this thing is a visual representation used for navigation. It shows things but contains none of them.</span>
+                    <span class="ar-text">🔍 هذا الشيء تمثيل بصري يُستخدم في التنقل. يُظهر الأشياء لكنه لا يحتويها.</span>
                 </div>
                 <div id="result-3" class="challenge-result"></div>
             </div>
@@ -1489,7 +1608,7 @@
     <div style="text-align:center; padding: 20px 0 40px;">
         <span class="section-tag en-text">// UNLOCKED_BADGES</span>
         <span class="section-tag ar-text">// الشارات_المفتوحة</span>
-        <h3 class="section-title" style="font-size:clamp(22px,3vw,36px);" class="reveal">
+        <h3 class="section-title" style="font-size:clamp(22px,3vw,36px);">
             <span class="en-text">CTF <span class="accent-word">Achievements</span></span>
             <span class="ar-text">إنجازات <span class="accent-word">CTF</span></span>
         </h3>
@@ -1678,12 +1797,10 @@ window.addEventListener('scroll', () => {
     const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
     document.getElementById('scroll-progress').style.width = pct + '%';
 
-    // Back to top button
     const btn = document.getElementById('back-to-top');
     if (scrollTop > 400) btn.classList.add('visible');
     else btn.classList.remove('visible');
 
-    // Navbar
     const navbar = document.getElementById('navbar');
     if (scrollTop > 60) navbar.classList.add('scrolled');
     else navbar.classList.remove('scrolled');
@@ -1868,20 +1985,13 @@ function drawRadar() {
         const angle = i * angleStep - Math.PI / 2;
         return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
     };
-
-    // Grid
-    const gridEl = document.getElementById('radar-grid');
-    gridEl.innerHTML = '';
+    const gridEl = document.getElementById('radar-grid'); gridEl.innerHTML = '';
     [0.25, 0.5, 0.75, 1].forEach(scale => {
         const pts = skills.map((_, i) => { const p = getPoint(i, R * scale); return `${p.x},${p.y}`; }).join(' ');
         const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-        poly.setAttribute('points', pts); poly.setAttribute('class', 'radar-grid');
-        gridEl.appendChild(poly);
+        poly.setAttribute('points', pts); poly.setAttribute('class', 'radar-grid'); gridEl.appendChild(poly);
     });
-
-    // Axes
-    const axesEl = document.getElementById('radar-axes');
-    axesEl.innerHTML = '';
+    const axesEl = document.getElementById('radar-axes'); axesEl.innerHTML = '';
     skills.forEach((_, i) => {
         const p = getPoint(i, R);
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -1889,29 +1999,20 @@ function drawRadar() {
         line.setAttribute('x2', p.x); line.setAttribute('y2', p.y);
         line.setAttribute('class', 'radar-axis'); axesEl.appendChild(line);
     });
-
-    // Data polygon
     const dataEl = document.getElementById('radar-data');
     const dataPts = skills.map((s, i) => { const p = getPoint(i, R * s.value); return `${p.x},${p.y}`; }).join(' ');
-    dataEl.setAttribute('points', ''); // start collapsed
+    dataEl.setAttribute('points', '');
     setTimeout(() => dataEl.setAttribute('points', dataPts), 600);
-
-    // Dots
-    const dotsEl = document.getElementById('radar-dots');
-    dotsEl.innerHTML = '';
+    const dotsEl = document.getElementById('radar-dots'); dotsEl.innerHTML = '';
     skills.forEach((s, i) => {
         const p = getPoint(i, R * s.value);
         const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.setAttribute('cx', p.x); circle.setAttribute('cy', p.y);
         circle.setAttribute('r', '4'); circle.setAttribute('class', 'radar-dot');
-        circle.setAttribute('opacity', '0');
-        dotsEl.appendChild(circle);
+        circle.setAttribute('opacity', '0'); dotsEl.appendChild(circle);
         setTimeout(() => circle.setAttribute('opacity', '1'), 800 + i * 100);
     });
-
-    // Labels
-    const labelsEl = document.getElementById('radar-labels');
-    labelsEl.innerHTML = '';
+    const labelsEl = document.getElementById('radar-labels'); labelsEl.innerHTML = '';
     skills.forEach((s, i) => {
         const p = getPoint(i, R + 22);
         const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -1933,8 +2034,7 @@ const ctfChallenges = [
     { answer: 'map', points: 300 },
 ];
 const ctfSolved = [false, false, false, false];
-let totalPoints = 0;
-let solvedCount = 0;
+let totalPoints = 0, solvedCount = 0;
 
 function switchChallenge(idx) {
     document.querySelectorAll('.challenge-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
@@ -1945,56 +2045,37 @@ function verifyChallenge(idx) {
     const input = document.getElementById(`input-${idx}`).value.trim();
     const resultEl = document.getElementById(`result-${idx}`);
     const isAr = document.body.classList.contains('ar');
-    const correct = ctfChallenges[idx].answer;
-
     resultEl.className = 'challenge-result';
-
     if (ctfSolved[idx]) {
         resultEl.classList.add('success');
         resultEl.textContent = isAr ? '✅ لقد حللت هذا التحدي بالفعل! +' + ctfChallenges[idx].points + ' نقاط' : '✅ Already solved! You earned +' + ctfChallenges[idx].points + ' pts';
         return;
     }
-
     const userAnswer = input.toLowerCase().replace(/\s+/g, '');
-    const correctAnswer = correct.toLowerCase().replace(/\s+/g, '');
-
+    const correctAnswer = ctfChallenges[idx].answer.toLowerCase().replace(/\s+/g, '');
     if (userAnswer === correctAnswer) {
-        ctfSolved[idx] = true;
-        solvedCount++;
-        totalPoints += ctfChallenges[idx].points;
+        ctfSolved[idx] = true; solvedCount++; totalPoints += ctfChallenges[idx].points;
         document.getElementById('ctf-solved-count').textContent = solvedCount;
         document.getElementById('ctf-total-pts').textContent = totalPoints;
         document.getElementById(`tab-${idx}`).classList.add('solved');
         resultEl.classList.add('success');
-        resultEl.innerHTML = isAr
-            ? `✅ [+] صحيح! +${ctfChallenges[idx].points} نقطة 🎉`
-            : `✅ [+] CORRECT! +${ctfChallenges[idx].points} pts earned! 🎉`;
-        launchConfetti();
-        checkAchievements();
+        resultEl.innerHTML = isAr ? `✅ [+] صحيح! +${ctfChallenges[idx].points} نقطة 🎉` : `✅ [+] CORRECT! +${ctfChallenges[idx].points} pts earned! 🎉`;
+        launchConfetti(); checkAchievements();
     } else if (!input) {
         resultEl.classList.add('fail');
         resultEl.textContent = isAr ? '⚠ يرجى إدخال الإجابة.' : '⚠ Please enter an answer.';
     } else {
         resultEl.classList.add('fail');
-        resultEl.innerHTML = isAr
-            ? '❌ [-] خاطئ — حاول مجدداً.'
-            : '❌ [-] ACCESS DENIED — Wrong answer. Try again.';
+        resultEl.innerHTML = isAr ? '❌ [-] خاطئ — حاول مجدداً.' : '❌ [-] ACCESS DENIED — Wrong answer. Try again.';
     }
 }
 
-function showHint(id) {
-    const hint = document.getElementById(id);
-    hint.classList.toggle('visible');
-}
+function showHint(id) { document.getElementById(id).classList.toggle('visible'); }
 
 function checkAchievements() {
-    // First blood — any solve
     if (solvedCount >= 1) unlockAchievement(0);
-    // Decoder Ring — solved 0 and 1 (crypto)
     if (ctfSolved[0] && ctfSolved[1]) unlockAchievement(1);
-    // Logic master — solved challenge 3
     if (ctfSolved[3]) unlockAchievement(2);
-    // Full sweep
     if (solvedCount === 4) unlockAchievement(3);
 }
 
@@ -2004,7 +2085,6 @@ function unlockAchievement(idx) {
         badge.classList.add('unlocked');
         const lockIcon = badge.querySelector('.ach-lock');
         if (lockIcon) lockIcon.className = 'fas fa-unlock ach-lock';
-        // Flash notification
         showAchievementToast(idx);
     }
 }
@@ -2013,19 +2093,8 @@ function showAchievementToast(idx) {
     const names = ['First Blood', 'Decoder Ring', 'Logic Master', 'Full Sweep'];
     const emojis = ['🔓', '🔑', '🧠', '🏆'];
     const toast = document.createElement('div');
-    toast.style.cssText = `
-        position:fixed; top:90px; right:20px; z-index:9999;
-        background:rgba(8,8,16,0.95); border:1px solid rgba(245,158,11,0.5);
-        border-radius:12px; padding:14px 20px; font-family:var(--font-mono);
-        font-size:13px; color:#f59e0b; display:flex; align-items:center; gap:10px;
-        box-shadow:0 8px 30px rgba(0,0,0,0.5); backdrop-filter:blur(10px);
-        animation:slideInRight 0.4s ease forwards;
-        max-width:280px;
-    `;
+    toast.style.cssText = `position:fixed;top:90px;right:20px;z-index:9999;background:rgba(8,8,16,0.95);border:1px solid rgba(245,158,11,0.5);border-radius:12px;padding:14px 20px;font-family:var(--font-mono);font-size:13px;color:#f59e0b;display:flex;align-items:center;gap:10px;box-shadow:0 8px 30px rgba(0,0,0,0.5);backdrop-filter:blur(10px);max-width:280px;`;
     toast.innerHTML = `${emojis[idx]} <span><strong>Achievement Unlocked!</strong><br><span style="color:var(--muted)">${names[idx]}</span></span>`;
-    const style = document.createElement('style');
-    style.textContent = `@keyframes slideInRight { from { transform: translateX(120%); opacity:0; } to { transform: translateX(0); opacity:1; } }`;
-    document.head.appendChild(style);
     document.body.appendChild(toast);
     setTimeout(() => { toast.style.transition = 'opacity 0.4s ease'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 3500);
 }
@@ -2041,15 +2110,15 @@ function launchConfetti() {
 }
 
 /* ============================================================
-   VISITOR COUNTER (simulated, realistic)
+   VISITOR COUNTER
 ============================================================ */
 function animateVisitorCount() {
     const el = document.getElementById('visitor-count');
     if (!el) return;
-    let base = Math.floor(Math.random() * 80) + 200; // 200-280
+    let base = Math.floor(Math.random() * 80) + 200;
     el.textContent = base;
     setInterval(() => {
-        const delta = Math.floor(Math.random() * 5) - 2; // -2 to +2
+        const delta = Math.floor(Math.random() * 5) - 2;
         base = Math.max(150, base + delta);
         el.textContent = base;
     }, 4000);
@@ -2135,13 +2204,8 @@ function toggleMenu() {
 const konamiCode = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
 let konamiIdx = 0;
 document.addEventListener('keydown', (e) => {
-    if (e.key === konamiCode[konamiIdx]) {
-        konamiIdx++;
-        if (konamiIdx === konamiCode.length) {
-            konamiIdx = 0;
-            activateEasterEgg();
-        }
-    } else { konamiIdx = 0; }
+    if (e.key === konamiCode[konamiIdx]) { konamiIdx++; if (konamiIdx === konamiCode.length) { konamiIdx = 0; activateEasterEgg(); } }
+    else { konamiIdx = 0; }
 });
 function activateEasterEgg() {
     const overlay = document.createElement('div');
@@ -2153,15 +2217,7 @@ function activateEasterEgg() {
         <button onclick="this.parentElement.remove()" style="margin-top:24px;background:transparent;border:1px solid #6366f1;color:#6366f1;padding:10px 24px;border-radius:8px;font-family:var(--font-mono);font-size:12px;cursor:pointer;">// CLOSE</button>
     `;
     document.body.appendChild(overlay);
-    const lines = [
-        '> Initializing secret mode...',
-        '> Decrypting analyst profile...',
-        '> Name: ???',
-        '> Clearance: LEVEL 5',
-        '> You found the Konami Code Easter Egg!',
-        '> Mohsen approves. 🔐',
-        '> "The quieter you become, the more you can hear."',
-    ];
+    const lines = ['> Initializing secret mode...','> Decrypting analyst profile...','> Name: ???','> Clearance: LEVEL 5','> You found the Konami Code Easter Egg!','> Mohsen approves. 🔐','> "The quieter you become, the more you can hear."'];
     const term = overlay.querySelector('#easter-terminal');
     let li = 0;
     const eggInterval = setInterval(() => {
