@@ -750,7 +750,8 @@ const CMDS={
   <span class="c">contact</span>    get in touch
   <span class="c">lang</span>       switch English / العربية
   <span class="c">theme</span>      switch light / dark
-  <span class="c">clear</span>      clear the screen`,
+  <span class="c">clear</span>      clear the screen
+<span class="d">it's a (tiny) real shell too: ls -a, cd, cat, nano, pwd, history…</span>`,
  whoami:()=>`<span class="g">mohsen</span>  Computer Science (Cyber Security), APU Kuala Lumpur
 status:  final year, open to internships
 goal:    Cybersecurity Analyst`,
@@ -773,8 +774,6 @@ goal:    Cybersecurity Analyst`,
  ctf:()=>{setTimeout(()=>document.getElementById('ctf').scrollIntoView({behavior:reduce?'auto':'smooth'}),250);return '<span class="g">launching ctf_arena…</span> good luck.'},
  contact:()=>`email     <a href="mailto:mohsen110099@gmail.com" class="c">mohsen110099@gmail.com</a>
 linkedin  <a href="https://www.linkedin.com/in/mohsen-f-alsharafi-6378b2346" target="_blank" rel="noopener" class="c">mohsen-f-alsharafi</a>`,
- ls:()=>`about.md  certifications/  projects/  <span class="p">flag.txt</span>`,
- 'cat flag.txt':()=>`<span class="r">permission denied.</span> real flags are in the CTF arena. type <span class="c">ctf</span>`,
  sudo:()=>`<span class="r">guest is not in the sudoers file.</span> This incident will be reported.`,
  'sudo su':()=>CMDS.sudo(),
  'rm -rf /':()=>`<span class="r">nice try.</span>`,
@@ -782,19 +781,112 @@ linkedin  <a href="https://www.linkedin.com/in/mohsen-f-alsharafi-6378b2346" tar
  theme:()=>{document.getElementById('theme').click();return 'theme switched.'},
  hello:()=>'hey 👋 type <span class="c">help</span>',
 };
-const history=[];let hi=0;
+const history=[];let hi=0;let cwd='~';
+const FS={
+ '~':{type:'dir',items:['about.md','certifications/','projects/','flag.txt','.notes']},
+ '~/certifications':{type:'dir',items:['cisco.txt','redhat.txt','security.txt','ai_singapore.txt','coursera.txt','digital_camp.txt']},
+ '~/projects':{type:'dir',items:['installguard.md','coffeecraft.md','portfolio.md','homelab.md']},
+ '~/about.md':{type:'file',body:()=>CMDS.whoami()+`\n\nfinal-year BSc Computer Science (Cyber Security) at APU.\ncompleted ELITE TecForte SOC, competed in MITRE eCTF 2026.\ncurrently studying for Security+, CEH and PenTest+.`},
+ '~/flag.txt':{type:'file',locked:true},
+ '~/.notes':{type:'file',body:()=>`<span class="d"># note to self</span>\n- the riddle answer is something every pentester draws before an engagement\n- remember: ↑ ↑ ↓ ↓ ← → ← → B A`},
+ '~/certifications/cisco.txt':{type:'file',body:()=>`CCNA: Switching, Routing & Wireless Essentials   Jan 2026\nIntroduction to Modern AI                        Dec 2025\nPython Essentials 1                              Nov 2025\nIntroduction to Cybersecurity                    Nov 2025\nLearn-A-Thon 2025                                Oct 2025\nCCNA: Introduction to Networks                   Sep 2025`},
+ '~/certifications/redhat.txt':{type:'file',body:()=>`System Administration II (RH134)   Oct 2025\nSystem Administration I (RH124)    Sep 2025`},
+ '~/certifications/security.txt':{type:'file',body:()=>`MITRE eCTF 2026 Participation      Apr 2026\nELITE TecForte SOC Programme       Mar 2026\nTryHackMe Advent of Cyber 2025     Dec 2025\nAPU Internal CTF Workshop          Mar 2025`},
+ '~/certifications/ai_singapore.txt':{type:'file',body:()=>`AI Ethics & Governance      Nov 2025\nAI4I Foundations in AI      Nov 2025\nAI4I Literacy in AI         Nov 2025\nAI4E Theory                 Nov 2025`},
+ '~/certifications/coursera.txt':{type:'file',body:()=>`Data Analysis using Microsoft Excel   Feb 2026\nUnderstanding Basic SQL Syntax        Feb 2026`},
+ '~/certifications/digital_camp.txt':{type:'file',body:()=>`AI Innovators Challenge   Oct 2026`},
+ '~/projects/installguard.md':{type:'file',body:()=>`<span class="p"># InstallGuard</span>  (final year project, in development)\nchecks downloaded Windows apps before installation and\ntells the user, in plain language, whether the file looks safe.`},
+ '~/projects/coffeecraft.md':{type:'file',body:()=>`<span class="p"># CoffeeCraft</span>  (live)\nfull-stack ASP.NET / C# / SQL Server team project.\n<a class="c" href="http://coffeecrafts.somee.com" target="_blank" rel="noopener">coffeecrafts.somee.com</a>`},
+ '~/projects/portfolio.md':{type:'file',body:()=>`<span class="p"># this portfolio</span>  (live)\ninteractive terminal + 4 CTF challenges, answers checked with SHA-256.`},
+ '~/projects/homelab.md':{type:'file',body:()=>`<span class="p"># home lab</span>  (ongoing)\nKali Linux + Metasploitable + DVWA on VMware.`},
+};
+function resolve(p){
+  if(!p||p==='~'||p==='/home/guest')return '~';
+  p=p.replace(/\/+$/,'');
+  if(p==='.')return cwd;
+  if(p==='..')return cwd==='~'?'~':cwd.split('/').slice(0,-1).join('/')||'~';
+  if(p.startsWith('~/'))return p;
+  if(p.startsWith('/'))return null;
+  if(p.startsWith('../'))return resolve(resolve('..')+'/'+p.slice(3));
+  return (cwd==='~'?'~':cwd)+'/'+p.replace(/^\.\//,'');
+}
+const denied=f=>`<span class="r">${esc(f)}: Permission denied</span> <span class="d">(owned by root). The real flags live in the CTF arena: type</span> <span class="c">ctf</span>`;
+function readFile(cmdName,arg){
+  if(!arg)return `<span class="r">${cmdName}: missing file operand</span>`;
+  const path=resolve(arg),node=path&&FS[path];
+  if(!node)return `<span class="r">${cmdName}: ${esc(arg)}: No such file or directory</span>`;
+  if(node.type==='dir')return `<span class="r">${cmdName}: ${esc(arg)}: Is a directory</span>`;
+  if(node.locked)return denied(arg);
+  return node.body();
+}
+const EDITORS=['nano','vim','vi','nvim','emacs','code','gedit'];
+const READERS=['cat','less','more','head','tail','bat','strings','xxd'];
+const SIMPLE={
+ pwd:()=>cwd==='~'?'/home/guest':'/home/guest'+cwd.slice(1),
+ date:()=>new Date().toString(),
+ hostname:()=>'mohsen',
+ 'uname':a=>a.includes('-a')?'Linux mohsen 6.8.0-portfolio #1 SMP x86_64 GNU/Linux':'Linux',
+ id:()=>'uid=1000(guest) gid=1000(guest) groups=1000(guest)',
+ echo:(a,raw)=>esc(raw.replace(/^echo\s*/i,'').replace(/^["']|["']$/g,'')),
+ history:()=>history.map((h,i)=>`${String(i+1).padStart(4)}  ${esc(h)}`).join('\n'),
+ exit:()=>`<span class="d">there is no escape. try</span> <span class="c">ctf</span> <span class="d">instead.</span>`,
+ logout:()=>SIMPLE.exit(),
+ man:()=>CMDS.help(),
+ nmap:()=>`Starting Nmap 7.94 ( https://nmap.org )\nNmap scan report for mohsen (127.0.0.1)\nPORT    STATE  SERVICE\n22/tcp  closed ssh\n80/tcp  open   http\n443/tcp open   https\n<span class="d">nice try. the only open port leads to the</span> <span class="c">ctf</span> <span class="d">arena.</span>`,
+ ping:a=>`PING ${esc(a[0]||'mohsen')}: 64 bytes, time=0.042 ms\n<span class="g">pong</span>`,
+ ssh:()=>`<span class="r">ssh: connect to host port 22: Connection refused</span>`,
+ apt:()=>`<span class="r">E: Could not open lock file - are you root?</span>`,
+ 'apt-get':()=>SIMPLE.apt(),
+ pip:()=>`<span class="r">error: externally-managed-environment</span> <span class="d">(guests can't install packages)</span>`,
+ rm:()=>`<span class="r">rm: cannot remove: Read-only file system</span> <span class="d">nice try.</span>`,
+ chmod:()=>`<span class="r">chmod: changing permissions: Operation not permitted</span>`,
+ su:()=>CMDS.sudo(),
+ touch:()=>SIMPLE.rm(),mkdir:()=>SIMPLE.rm(),
+};
+function lev(a,b){const d=Array.from({length:a.length+1},(_,i)=>[i]);for(let j=1;j<=b.length;j++)d[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[a.length][b.length]}
+function allNames(){return [...new Set(Object.keys(CMDS).filter(k=>!k.includes(' ')).concat(Object.keys(SIMPLE),EDITORS,READERS,['ls','cd','clear']))]}
+function setPrompt(){document.querySelector('.term-in .p').textContent=`guest@mohsen:${cwd}$`}
+function exec(cmd){
+  const parts=cmd.split(/\s+/),name=parts[0].toLowerCase(),args=parts.slice(1),low=cmd.toLowerCase();
+  if(CMDS[low])return CMDS[low]();
+  if(name==='sudo')return CMDS.sudo();
+  if(name==='clear'){out.innerHTML='';return null}
+  if(name==='ls'||name==='ll'||name==='dir'){
+    const showAll=args.some(a=>/^-\w*a/.test(a))||name==='ll';
+    const target=args.find(a=>!a.startsWith('-'));const path=target?resolve(target):cwd,node=path&&FS[path];
+    if(!node)return `<span class="r">ls: cannot access '${esc(target)}': No such file or directory</span>`;
+    if(node.type==='file')return esc(target);
+    return node.items.filter(n=>showAll||!n.startsWith('.')).map(n=>n.endsWith('/')?`<span class="c">${n}</span>`:n==='flag.txt'?`<span class="p">${n}</span>`:n).join('  ');
+  }
+  if(name==='cd'){
+    const path=resolve(args[0]),node=path&&FS[path];
+    if(!node)return `<span class="r">cd: ${esc(args[0])}: No such file or directory</span>`;
+    if(node.type!=='dir')return `<span class="r">cd: ${esc(args[0])}: Not a directory</span>`;
+    cwd=path;setPrompt();return null;
+  }
+  if(READERS.includes(name))return readFile(name,args.find(a=>!a.startsWith('-')));
+  if(EDITORS.includes(name)){
+    const f=args[0];if(!f)return `<span class="d">${name}: opening an empty buffer is no fun here. try</span> <span class="c">${name} about.md</span>`;
+    const path=resolve(f),node=path&&FS[path];
+    if(node&&node.locked)return denied(f);
+    if(node&&node.type==='file')return `<span class="d">[ ${esc(f)} opened read-only: guests can't edit ]</span>\n`+node.body();
+    if(node&&node.type==='dir')return `<span class="r">${name}: ${esc(f)}: Is a directory</span>`;
+    return `<span class="r">${name}: ${esc(f)}: Read-only file system</span>`;
+  }
+  if(SIMPLE[name])return SIMPLE[name](args,cmd);
+  const near=allNames().map(n=>[n,lev(name,n)]).filter(x=>x[1]<=2).sort((a,b)=>a[1]-b[1])[0];
+  return `<span class="r">command not found:</span> ${esc(parts[0])}`+(near?`. did you mean <span class="c">${near[0]}</span>?`:`. type <span class="c">help</span>`);
+}
 function run(raw){
-  const cmd=raw.trim();print(`<span class="p">guest@mohsen:~$</span> ${esc(cmd)}`);
+  const cmd=raw.trim();print(`<span class="p">guest@mohsen:${cwd}$</span> ${esc(cmd)}`);
   if(!cmd)return;history.push(cmd);hi=history.length;
-  if(cmd==='clear'){out.innerHTML='';return}
-  const f=CMDS[cmd.toLowerCase()];
-  print(f?f():`<span class="r">command not found:</span> ${esc(cmd)}. type <span class="c">help</span>`);
+  const res=exec(cmd);if(res!==null&&res!==undefined)print(res);
 }
 tin.addEventListener('keydown',e=>{
   if(e.key==='Enter'){run(tin.value);tin.value=''}
   else if(e.key==='ArrowUp'){if(hi>0){hi--;tin.value=history[hi]}e.preventDefault()}
   else if(e.key==='ArrowDown'){if(hi<history.length-1){hi++;tin.value=history[hi]}else{hi=history.length;tin.value=''}e.preventDefault()}
-  else if(e.key==='Tab'){const m=Object.keys(CMDS).concat('clear').find(k=>k.startsWith(tin.value)&&tin.value);if(m)tin.value=m;e.preventDefault()}
+  else if(e.key==='Tab'){const v=tin.value,sp=v.lastIndexOf(' ');if(sp<0){const m=allNames().find(k=>k.startsWith(v)&&v);if(m)tin.value=m+' '}else{const pre=v.slice(sp+1),node=FS[cwd],m=node&&node.items.find(n=>n.startsWith(pre));if(m)tin.value=v.slice(0,sp+1)+m}e.preventDefault()}
 });
 tbody.addEventListener('click',()=>{if(!getSelection().toString())tin.focus({preventScroll:true})});
 document.querySelectorAll('[data-cmd]').forEach(b=>b.onclick=()=>{run(b.dataset.cmd);tin.focus({preventScroll:true})});
